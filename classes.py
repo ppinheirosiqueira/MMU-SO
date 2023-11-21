@@ -11,7 +11,9 @@ class Memoria:
         self.pagRef = []
 
     def addPagina(self, pagina):
-        self.paginas = self.paginas.append(pagina)
+        self.paginas.append(pagina)
+        self.pagRef.append(0)
     
     def popPagina(self, posPagina): # precisa ser a posição da página
-        self.paginas = self.paginas.pop(posPagina)
+        self.paginas.pop(posPagina)
+        self.pagRef.pop(posPagina)
