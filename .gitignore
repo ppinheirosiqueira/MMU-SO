@@ -1,1 +1,5 @@
 __pycache__/*
+*/__pycache__/*
+SO/MMU/__pycache__/*
+SO/MMU/migrations/*
+SO/SO/__pycache__/*

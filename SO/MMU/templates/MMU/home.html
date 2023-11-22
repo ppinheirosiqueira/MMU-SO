@@ -1,0 +1,17 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="{% static 'scripts/upload.js' %}?v=1.0"></script>
+    <title>MMU</title>
+</head>
+<body>
+    <input type="file" id="jsonFileInput" style="display: none;">
+    {% csrf_token %}
+    <button id="importJsonButton">Importar JSON</button><br>
+    Aqui virá o texto
+</body>
+</html>
