@@ -1,7 +1,7 @@
 import random
 random.seed(2023)
 
-def FIFO(mem, pages):
+def Rand(mem, pages):
     pagemiss = 0
     while True:
         page = pages.pop(0)
@@ -9,9 +9,9 @@ def FIFO(mem, pages):
 
         if x == None:
             pagemiss += 1
-            element = mem.pop(0)
+            element = random.choice(mem)
             text = f"Removeu: {element}"
-            mem.append({"page": page, "R": 0})
+            element.update({"page": page, "R": 0})
         else:
             mem[x].update({"R": 1})
             text = f"Referenciou: {mem[x]}"
@@ -39,4 +39,4 @@ while True:
     if i == size:
         break
 
-FIFO(mem, pages)
+Rand(mem, pages)
