@@ -1,19 +1,50 @@
+import numpy as np
+
 class Processo:
-    def __init__(self, nome, pagIni, pagFin):
-        self.nome = nome
+    def __init__(self, pagIni, pagFin):
         self.pagIni = pagIni
         self.pagFin = pagFin
+        self.qtdPag = pagFin - pagIni + 1
+
+class SWAP:
+    def __init__(self):
+        self.processos = {}
+
+    def addProcesso(self, nome, processo):
+        self.processos.update({nome:processo})
+
+    def findProcesso(self,nome):
+        return self.processos[nome]
 
 class Memoria:
     def __init__(self, qtdPaginas):
         self.tamanho = qtdPaginas
         self.paginas = []
-        self.pagRef = []
 
     def addPagina(self, pagina):
         self.paginas.append(pagina)
-        self.pagRef.append(0)
     
     def popPagina(self, posPagina): # precisa ser a posição da página
         self.paginas.pop(posPagina)
-        self.pagRef.pop(posPagina)
+
+class Algoritmo:
+    def __init__(self, memoria):
+        self.memoria = memoria.copy()
+        self.pageMiss = 0
+        self.tempo = 0
+
+    def incPM(self):
+        self.pageMiss += 1
+
+    def incTimer(self, valor):
+        self.tempo += valor
+
+class Envelhecimento(Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.matriz = np.array(np.zeros((memoria.tamanho,memoria.tamanho)))
+
+class LRU(Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.matriz = np.array(np.zeros((memoria.tamanho,8)))

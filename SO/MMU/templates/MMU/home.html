@@ -5,13 +5,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="{% static 'scripts/upload.js' %}?v=1.0"></script>
     <title>MMU</title>
 </head>
 <body>
-    <input type="file" id="jsonFileInput" style="display: none;">
-    {% csrf_token %}
-    <button id="importJsonButton">Importar JSON</button><br>
-    Aqui virá o texto
+    <button>HELP</button>
+    <div class="algoritmos">
+        <input type="checkbox" name="todos" id="todos"><label for="todos">Todos</label>
+        <input type="checkbox" name="envelhecimento" id="envelhecimento"><label for="envelhecimento">Envelhecimento</label>
+        <input type="checkbox" name="fifo" id="fifo"><label for="fifo">First In - First Out</label>
+        <input type="checkbox" name="lru" id="lru"><label for="lru">Menos Referenciado Recentemente</label>
+        <input type="checkbox" name="nru" id="nru"><label for="nru">Não Referenciado Recentemente</label>
+        <input type="checkbox" name="rand" id="rand"><label for="rand">Randômico</label>
+        <input type="checkbox" name="relogio" id="relogio"><label for="relogio">Relógio</label>
+        <input type="checkbox" name="sc" id="sc"><label for="sc">Segunda Chance</label>
+    </div>
+    <div class="memoria">
+        <label for="page">Insira o Tamanho da Página (kB):</label><input type="number" name="page" id="page">
+        <label for="page">Tamanho da memória RAM (relativo a SWAP):</label><input type="number" name="X" id="X">
+        <label for="page">% do processo ao iniciar na memória:</label><input type="number" name="Y" id="Y">
+    </div>
+    <div class="processos">
+        <label for="page">Quantidade de processos:</label><input type="number" name="qtdPro" id="qtdPro">
+        <label for="page">Tamanho do Processo:</label><input type="number" name="tamPro" id="tamPro">
+    </div>
+    <div class="saida">
+        <input type="checkbox" name="lru" id="lru"><label for="lru">Gráficos</label>
+        <input type="checkbox" name="nru" id="nru"><label for="nru">Tabelas</label>
+        <input type="checkbox" name="rand" id="rand"><label for="rand">Mostrar Algoritmos em execução</label>
+    </div>
+    <div class="execucao">
+        <label for="page">Quantos processos serão executados:</label><input type="number" name="qtdProExe" id="qtdProExe">
+        <input type="checkbox" name="aleatorio" id="aleatorio"><label for="aleatorio">Processos aleatórios?</label>
+        <input type="checkbox" name="lote" id="Lote"><label for="lote">Lote?</label>
+        <label for="page">Lista dos processos a serem executados:</label><input type="text" name="lista" id="lista">
+    </div>
+    <button>Executar</button>
 </body>
 </html>
