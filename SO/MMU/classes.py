@@ -9,12 +9,20 @@ class Processo:
 class SWAP:
     def __init__(self):
         self.processos = {}
+        self.totalPag = 0
 
     def addProcesso(self, nome, processo):
         self.processos.update({nome:processo})
 
     def findProcesso(self,nome):
         return self.processos[nome]
+    
+    def attTotal(self, valor):
+        self.totalPag = valor
+
+    def print(self):
+        for chave, valor in self.processos.items():
+            print(f'Chave: {chave}, QtdPag: {valor.qtdPag}')
 
 class Memoria:
     def __init__(self, qtdPaginas):
