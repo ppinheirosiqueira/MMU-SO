@@ -8,58 +8,61 @@
     <title>MMU</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
     <script type="text/javascript" src="{% static 'scripts/MaisMenosProcessos.js' %}"></script>
-    <style>
-        #aleatorio:checked ~ #lista{display:none;}
-        #aleatorio:checked ~ label[for="lista"]{display:none;}
-    </style>
 </head>
 <body>
     <h1>Gerênciamento de Memória</h1>
     <form method="post" action="{% url 'executar' %}">
         {% csrf_token %}
-        <div class="algoritmos">
-            <h3>Algoritmos</h3>
-            <label for="todos"><input type="checkbox" name="todos" id="todos" checked>Todos</label>
-            <label for="envelhecimento"><input type="checkbox" name="envelhecimento" id="envelhecimento" checked>Envelhecimento</label>
-            <label for="fifo"><input type="checkbox" name="fifo" id="fifo" checked>First In - First Out</label>
-            <label for="lru"><input type="checkbox" name="lru" id="lru" checked>Menos Referenciado Recentemente</label>
-            <label for="nru"><input type="checkbox" name="nru" id="nru" checked>Não Referenciado Recentemente</label>
-            <label for="rand"><input type="checkbox" name="rand" id="rand" checked>Randômico</label>
-            <label for="relogio"><input type="checkbox" name="relogio" id="relogio" checked>Relógio</label>
-            <label for="sc"><input type="checkbox" name="sc" id="sc" checked>Segunda Chance</label>
+        <div class="teste">
+            <div class="algoritmos">
+                <h3>Algoritmos</h3>
+                <label for="todos"><input type="checkbox" name="todos" id="todos" checked>Todos</label>
+                <label for="envelhecimento"><input type="checkbox" name="envelhecimento" id="envelhecimento" checked>Envelhecimento</label>
+                <label for="fifo"><input type="checkbox" name="fifo" id="fifo" checked>First In - First Out</label>
+                <label for="lru"><input type="checkbox" name="lru" id="lru" checked>Menos Referenciado Recentemente</label>
+                <label for="nru"><input type="checkbox" name="nru" id="nru" checked>Não Referenciado Recentemente</label>
+                <label for="rand"><input type="checkbox" name="rand" id="rand" checked>Randômico</label>
+                <label for="relogio"><input type="checkbox" name="relogio" id="relogio" checked>Relógio</label>
+                <label for="sc"><input type="checkbox" name="sc" id="sc" checked>Segunda Chance</label>
+            </div>
+            <div class="saida">
+                <h3>Saída</h3>
+                <label for="graficos"><input type="checkbox" name="graficos" id="graficos" checked>Gráficos</label>
+                <label for="tabelas"><input type="checkbox" name="tabelas" id="tabelas" checked>Tabelas</label>
+                <label for="algoritmos"><input type="checkbox" name="algoritmos" id="algoritmos" checked>Mostrar Algoritmos em execução</label>
+            </div>
+            <div class="execucao">
+                <h3>Execução</h3>
+                <label for="qtdProExe">Quantos processos serão executados:</label><input type="number" name="qtdProExe" id="qtdProExe" value=5 min="1">
+                <label for="aleatorio"><input type="checkbox" name="aleatorio" id="aleatorio" checked onclick="setListaProcessos()">Processos aleatórios?</label>
+                <label for="lote"><input type="checkbox" name="lote" id="Lote" checked>Lote?</label>
+                <label for="lista" class="listaProcessos">Lista ordenada dos processos a serem executados:</label><input type="text" name="lista" id="lista" class="listaProcessos">
+            </div>
+            <button type="submit">Executar</button>
         </div>
         <div class="memoria">
             <h3>Memória</h3>
             <label for="page">Insira o Tamanho da Página (kB):</label><input type="number" name="page" id="page" value=4 min="1">
-            <label for="X">Tamanho da memória RAM (relativo a SWAP):</label><input type="number" name="X" id="X" value=10 min="1">
             <label for="Y">% do processo ao iniciar na memória:</label><input type="number" name="Y" id="Y" value=10 min="1">
+            <div class="botoesMemoria">
+                <button id="menosMemoria" style="display: none;" type="button" onclick="removerLinhaMemoria()">-</button>
+                <button id="maisMemoria" type="button" onclick="adicionarLinhaMemoria()">+</button>
+            </div>
+            <div class="inputMemoria">
+                <label for="X1">Tamanho da memória RAM (relativo a SWAP):</label><input type="number" name="X1" id="X1" value=10 min="1" max="100">
+            </div>
         </div>
         <div class="processos">
             <h3>Processos</h3>
             <div class="botoesProcessos">
-                <button type="button" onclick="adicionarLinha()">+</button>
-                <button type="button" onclick="removerLinha()">-</button>
+                <button id="menosProcesso" style="display: none;" type="button" onclick="removerLinhaProcesso()">-</button>
+                <button id="maisProcesso" type="button" onclick="adicionarLinhaProcesso()">+</button>
             </div>
             <div class="inputProcesso">
                 <label for="qtdPro1">Quantidade de processos:</label><input type="number" name="qtdPro1" id="qtdPro1" value=5 min="1">
                 <label for="tamPro1">Tamanho do Processo (nº de páginas):</label><input type="number" name="tamPro1" id="tamPro1" value=5 min="1">
             </div>
         </div>
-        <div class="saida">
-            <h3>Saída</h3>
-            <label for="graficos"><input type="checkbox" name="graficos" id="graficos" checked>Gráficos</label>
-            <label for="tabelas"><input type="checkbox" name="tabelas" id="tabelas" checked>Tabelas</label>
-            <label for="algoritmos"><input type="checkbox" name="algoritmos" id="algoritmos" checked>Mostrar Algoritmos em execução</label>
-        </div>
-        <div class="execucao">
-            <h3>Execução</h3>
-            <label for="qtdProExe">Quantos processos serão executados:</label><input type="number" name="qtdProExe" id="qtdProExe" value=5 min="1">
-            <label for="aleatorio"><input type="checkbox" name="aleatorio" id="aleatorio" checked>Processos aleatórios?</label>
-            <label for="lote"><input type="checkbox" name="lote" id="Lote" checked>Lote?</label>
-            <label for="lista">Lista ordenada dos processos a serem executados:</label><input type="text" name="lista" id="lista">
-        </div>
-        <button>HELP</button>
-        <button type="submit">Executar</button>
     </form>
     </body>
 </html>

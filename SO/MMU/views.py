@@ -25,7 +25,6 @@ def executar(request):
             if dados_do_formulario['sc'] == 'on':
                 sc = True
         page = dados_do_formulario['page']
-        X = dados_do_formulario['X']
         Y = dados_do_formulario['Y']
         if dados_do_formulario['graficos'] == 'on':
             graficos = True
@@ -67,8 +66,11 @@ def executar(request):
                 vetorQtdPro2.pop(0)
                 vetorTamPro2.pop(0)
         swap.attTotal(pagFin + 1) # o total de páginas da swap é igual o valor da pagina final + 1, já q tem a página 0
-        print(pagFin)
-        swap.print()
+
+        vetorX = []
+        for chave, valor in dados_do_formulario.items():
+            if chave.startswith('X') and chave[1:].isdigit():
+                vetorX.append(dados_do_formulario[f'X{chave[1:]}'])
 
     return render(request, "MMU/home.html", {})
 
