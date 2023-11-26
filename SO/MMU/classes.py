@@ -1,4 +1,7 @@
 import numpy as np
+from time import sleep
+from random import choice, seed
+import copy
 
 class Processo:
     def __init__(self, pagIni, pagFin):
@@ -44,14 +47,20 @@ class Memoria:
     def popPagina(self, posPagina): # precisa ser a posição da página
         self.paginas.pop(posPagina)
 
+    def getPageFromSWAP(self, semente):
+        seed(semente)
+        time = choice([*range(1,11)])
+        sleep(time/100)
+
     def print(self):
         print(f'Procentagem Inical dos Processos: {self.Y*100}%, Tamanho das Páginas: {self.size}kB, Quantidade de Páginas: {self.tamanho}, Espaço Total: {self.size * self.tamanho}kB, Lista de Execução: {self.listaExec}')
         for page in self.paginas:
             print(f'Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}')
 
 class Algoritmo:
-    def __init__(self, memoria):
-        self.memoria = memoria.copy()
+    def __init__(self, nome, memoria):
+        self.nome = nome
+        self.memoria = copy.copy(memoria)
         self.pageMiss = 0
         self.tempo = 0
 
