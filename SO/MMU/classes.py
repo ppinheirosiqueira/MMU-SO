@@ -19,21 +19,35 @@ class SWAP:
     
     def attTotal(self, valor):
         self.totalPag = valor
+    
+    def qtdProcessos(self):
+        return len(self.processos)
 
     def print(self):
         for chave, valor in self.processos.items():
-            print(f'Chave: {chave}, QtdPag: {valor.qtdPag}')
+            print(f'Chave: {chave}, QtdPag: {valor.qtdPag}, PagIni: {valor.pagIni}, PagFin: {valor.pagFin}')
 
 class Memoria:
-    def __init__(self, qtdPaginas):
+    def __init__(self, yProcessos, sizePaginas, qtdPaginas):
+        self.Y = yProcessos
+        self.size = sizePaginas
         self.tamanho = qtdPaginas
         self.paginas = []
+        self.listaExec = []
+
+    def addListaExec(self, lista):
+        self.listaExec = lista
 
     def addPagina(self, pagina):
         self.paginas.append(pagina)
     
     def popPagina(self, posPagina): # precisa ser a posição da página
         self.paginas.pop(posPagina)
+
+    def print(self):
+        print(f'Procentagem Inical dos Processos: {self.Y*100}%, Tamanho das Páginas: {self.size}kB, Quantidade de Páginas: {self.tamanho}, Espaço Total: {self.size * self.tamanho}kB, Lista de Execução: {self.listaExec}')
+        for page in self.paginas:
+            print(f'Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}')
 
 class Algoritmo:
     def __init__(self, memoria):
