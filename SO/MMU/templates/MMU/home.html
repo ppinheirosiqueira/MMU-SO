@@ -8,10 +8,11 @@
     <title>MMU</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
     <script type="text/javascript" src="{% static 'scripts/MaisMenosProcessos.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/executar.js' %}"></script>
 </head>
 <body>
     <h1>Gerênciamento de Memória</h1>
-    <form method="post" action="{% url 'executar' %}">
+    <form id="MMUForm" method="post" action="{% url 'executar' %}">
         {% csrf_token %}
         <div class="teste">
             <div class="algoritmos">
