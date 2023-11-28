@@ -5,6 +5,7 @@ from django.http import JsonResponse
 import json
 
 swap = classes.SWAP()
+memorias = []
 procExec = []
 
 def home(request):
@@ -60,43 +61,16 @@ def executar(request):
         else:
             algExc = False
 
-        # Pegando dados que formam a memória
-        page = int(dados_do_formulario['page'])
-        Y = int(dados_do_formulario['Y'])
-
-        # Pegando valores de X
-        vetorX = []
-        for chave, valor in dados_do_formulario.items():
-            if chave.startswith('X') and chave[1:].isdigit():
-                vetorX.append(int(dados_do_formulario[f'X{chave[1:]}']))
-
-        for X in vetorX:
-            qtdPags = 0
-            for proc in swap.processos:
-                qtdPags += swap.processos[proc].qtdPag
-            qtdPags = round(qtdPags * (X/100))
-
-            memoria = classes.Memoria((Y/100), page, qtdPags)
-
-            inicias = list()
-            finais = list()
-            for proc in procExec:
-                processo = swap.findProcesso(proc)
-                qtdPagProc = ceil(processo.qtdPag * memoria.Y)
-                if len(memoria.paginas) + qtdPagProc <= memoria.tamanho:
-                    for i in range(0,qtdPagProc):
-                        memoria.addPagina({'page': processo.pagIni + i, 'R': 0, 'processo': proc})
-                    inicias.append(proc)
-                else:
-                    finais.append(proc)
-            memoria.addListaExec(inicias + finais)
-
-            random = classes.Algoritmo('Random', memoria)
-            print(swap.print())
+        print(memorias)
+        for mem in memorias:
+            random = algoritmos.Random(mem)
+            swap.print()
             print(procExec)
-            algoritmos.Rand(random, swap)
-            print(f"Algoritmo: {random.nome}, PageMiss: {random.pageMiss}, Tempo de Subistituição: {random.tempo}s")
+            if algExc: 
+                while random.RandStep(swap): pass
+            else : random.Rand(swap)
             
+            random.print()
 
     return render(request, "MMU/home.html", {})
 
@@ -109,5 +83,11 @@ def criarSwap(request, vetor_qtd_pro, vetor_tam_pro):
 def criarListaProcessos(request, aleatorio, lote, qtdProExe, listaProcessos):
     global procExec
     procExec, mensagem = util.criarListaProcessos(aleatorio, lote, qtdProExe, swap, json.loads(listaProcessos))
+    data = {'status': mensagem}
+    return JsonResponse(data)
+
+def criarMemorias(request, vetorX, Y, pageSize, swapAle):
+    global memorias
+    memorias, mensagem = classes.criandoMemorias(swap, procExec, json.loads(vetorX), Y, pageSize, swapAle)
     data = {'status': mensagem}
     return JsonResponse(data)

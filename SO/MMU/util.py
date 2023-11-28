@@ -2,6 +2,7 @@ import random
 from random import choice
 
 def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
+    listaProcessos = [item.strip() for item in listaProcessos]
     procExec = []
     if lote:
         if qtdProExe > swap.qtdProcessos():

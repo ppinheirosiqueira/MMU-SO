@@ -1,7 +1,7 @@
-import numpy as np
 from time import sleep
-from random import choice, seed
+from random import choice
 import copy
+from math import ceil
 
 class Processo:
     def __init__(self, pagIni, pagFin):
@@ -31,12 +31,13 @@ class SWAP:
             print(f'Chave: {chave}, QtdPag: {valor.qtdPag}, PagIni: {valor.pagIni}, PagFin: {valor.pagFin}')
 
 class Memoria:
-    def __init__(self, yProcessos, sizePaginas, qtdPaginas):
+    def __init__(self, yProcessos, sizePaginas, qtdPaginas, swapAle):
         self.Y = yProcessos
         self.size = sizePaginas
         self.tamanho = qtdPaginas
         self.paginas = []
         self.listaExec = []
+        self.swapAle = swapAle
 
     def addListaExec(self, lista):
         self.listaExec = lista
@@ -47,9 +48,11 @@ class Memoria:
     def popPagina(self, posPagina): # precisa ser a posição da página
         self.paginas.pop(posPagina)
 
-    def getPageFromSWAP(self, semente):
-        seed(semente)
-        time = choice([*range(1,11)])
+    def getPageFromSWAP(self):
+        if self.swapAle:
+            time = choice([*range(1,11)])
+        else:
+            time = 5
         sleep(time/100)
 
     def print(self):
@@ -58,27 +61,19 @@ class Memoria:
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}")
 
 class Algoritmo:
-    def __init__(self, nome, memoria):
-        self.nome = nome
+    def __init__(self, memoria):
         self.memoria = copy.copy(memoria)
         self.pageMiss = 0
         self.tempo = 0
+        self.currentIndex = ""
+        self.currentProc = None
+        self.currentPage = -1
 
     def incPM(self):
         self.pageMiss += 1
 
     def incTimer(self, valor):
         self.tempo += valor
-
-class Envelhecimento(Algoritmo):
-    def __init__(self, memoria):
-        super().__init__(memoria)
-        self.matriz = np.array(np.zeros((memoria.tamanho,memoria.tamanho)))
-
-class LRU(Algoritmo):
-    def __init__(self, memoria):
-        super().__init__(memoria)
-        self.matriz = np.array(np.zeros((memoria.tamanho,8)))
 
 def criandoSWAP(swap, vetorQtdPro,vetorTamPro):
     aux = 1
@@ -97,3 +92,34 @@ def criandoSWAP(swap, vetorQtdPro,vetorTamPro):
             vetorTamPro.pop(index)
     swap.attTotal(pagFin + 1) # o total de páginas da swap é igual o valor da pagina final + 1, já q tem a página 0
     return swap, 'Sucesso'
+
+def criandoMemorias(swap, procExec, vetorX, Y, pageSize, swapAle):
+    memorias = []
+    
+    qtdPags = 0
+    for proc in swap.processos:
+        qtdPags += swap.processos[proc].qtdPag
+    
+    for X in vetorX:
+        qtdPaginas = round(qtdPags * (X/100))
+        if qtdPaginas == 1:
+            return None, 'Uma das memórias passadas terá espaço para só uma página!'
+
+        memoria = Memoria((Y/100), pageSize, qtdPaginas, swapAle)
+
+        inicias = list()
+        finais = list()
+        for proc in procExec:
+            processo = swap.findProcesso(proc)
+            qtdPagProc = ceil(processo.qtdPag * memoria.Y)
+            if len(memoria.paginas) + qtdPagProc <= memoria.tamanho:
+                for i in range(0,qtdPagProc):
+                    memoria.addPagina({'page': processo.pagIni + i, 'R': 0, 'processo': proc})
+                inicias.append(proc)
+            else:
+                finais.append(proc)
+        memoria.addListaExec(inicias + finais)
+
+        memorias.append(memoria)
+    
+    return memorias, 'Sucesso'

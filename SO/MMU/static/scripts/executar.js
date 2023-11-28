@@ -67,6 +67,33 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Ocorreu um erro:', error)
         }
 
+        const vetorX = []
+
+        // Itera sobre os elementos do formulário
+        for (const elemento of formulario.elements) {
+            if (elemento.name.startsWith('X') && elemento.name.slice(1).match(/^\d+$/)) {
+                const numero = elemento.name.slice(1)
+                vetorX.push(parseInt(elemento.value))
+            }
+        }
+
+        Y = document.getElementById('Y').value
+        pageSize = document.getElementById('page').value
+        swapAle = document.getElementById('swap').checked? 1 : 0
+        
+        const urlMemoria = `/criarMemorias/${JSON.stringify(vetorX)}/${Y}/${pageSize}/${swapAle}`
+
+        try {
+            const dataMemoria = await fetchData(urlMemoria)
+
+            if (dataMemoria['status'] !== "Sucesso") {
+                alert(dataMemoria['status'])
+                return
+            }
+        } catch (error) {
+            console.log('Ocorreu um erro:', error)
+        }
+
         formulario.submit()
     })
 })
