@@ -20,27 +20,17 @@ def Envelhecimento(mem, matriz_paginas, pages):
             text = f"Removeu: {menor_pagina}"
             menor_pagina.update({"page": page, "R": 0})
             
-            matriz_paginas = np.roll(matriz_paginas, shift=-1, axis=1)
-            referencias = list(x["R"] for x in mem)
-            if len(referencias) < size:
-                for x in range(size-len(referencias)):
-                    referencias.append(0)
-            referencias = np.array(referencias)
+            matriz_paginas = np.roll(matriz_paginas, shift=1, axis=1)
+            referencias = np.array(list(x["R"] for x in mem))
             referencias = referencias[...,None]
-            np.flip(referencias, axis=0)
-            matriz_paginas[:, 7] = referencias.flatten()
+            matriz_paginas[:, 0] = referencias.flatten()
         else:
             mem[x].update({"R": 1})
             text = f"Referenciou: {mem[x]}"
-            matriz_paginas = np.roll(matriz_paginas, shift=-1, axis=1)
-            referencias = list(x["R"] for x in mem)
-            if len(referencias) < size:
-                for x in range(size-len(referencias)):
-                    referencias.append(0)
-            referencias = np.array(referencias)
+            matriz_paginas = np.roll(matriz_paginas, shift=1, axis=1)
+            referencias = np.array(list(x["R"] for x in mem))
             referencias = referencias[...,None]
-            np.flip(referencias, axis=0)
-            matriz_paginas[:, 7] = referencias.flatten()
+            matriz_paginas[:, 0] = referencias.flatten()
 
         print(f"Pagina passada: {page} --> Aconteceu: {text}")
 
@@ -54,10 +44,8 @@ mem = list()
 size = int(100 * (rd.choice([10,20,30,40,50])/100))
 matriz_paginas = np.array(np.zeros((size,8)))
 i = 0
-count = 0
 
 while True:
-    count += 1
     num = pages.pop(0)
     x = next((n for n, item in enumerate(mem) if item["page"] == num), None)
     if x == None:
@@ -66,25 +54,14 @@ while True:
     else:
         mem[x].update({"R": 1})
 
-    if count <= 8:
-        referencias = list(x["R"] for x in mem)
-        if len(referencias) < size:
-            for x in range(size-len(referencias)):
-                referencias.append(0)
-        referencias = np.array(referencias)
-        referencias = referencias[...,None]
-        np.flip(referencias, axis=0)
-        matriz_paginas[:, count-1] = referencias.flatten()
-    else:
-        matriz_paginas = np.roll(matriz_paginas, shift=-1, axis=1)
-        referencias = list(x["R"] for x in mem)
-        if len(referencias) < size:
-            for x in range(size-len(referencias)):
-                referencias.append(0)
-        referencias = np.array(referencias)
-        referencias = referencias[...,None]
-        np.flip(referencias, axis=0)
-        matriz_paginas[:, 7] = referencias.flatten()
+    matriz_paginas = np.roll(matriz_paginas, shift=1, axis=1)
+    referencias = list(x["R"] for x in mem)
+    if len(referencias) < size:
+        for x in range(size-len(referencias)):
+            referencias.append(0)
+    referencias = np.array(referencias)
+    referencias = referencias[...,None]
+    matriz_paginas[:, 0] = referencias.flatten()
 
     if i == size:
         break

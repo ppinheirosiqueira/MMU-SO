@@ -52,7 +52,7 @@ class Memoria:
         if self.swapAle:
             time = choice([*range(1,11)])
         else:
-            time = 5
+            time = 1
         sleep(time/100)
 
     def print(self):
@@ -62,7 +62,7 @@ class Memoria:
 
 class Algoritmo:
     def __init__(self, memoria):
-        self.memoria = copy.copy(memoria)
+        self.memoria = copy.deepcopy(memoria)
         self.pageMiss = 0
         self.tempo = 0
         self.currentIndex = ""
