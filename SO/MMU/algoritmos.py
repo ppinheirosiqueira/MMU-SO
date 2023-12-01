@@ -3,10 +3,14 @@ from random import choice
 from time import time
 from . import classes
 class Random(classes.Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.nome = "Random"
+
     def Rand(self, swap):
         while self.RandStep(swap) : pass
 
-    def RandStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -16,20 +20,23 @@ class Random(classes.Algoritmo):
                 self.currentPage += 1
 
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
-                
+            
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                retirado = choice(self.memoria.paginas)
-                retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                    retirado = choice(self.memoria.paginas)
+                    retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
 
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
 
@@ -47,10 +54,14 @@ class Random(classes.Algoritmo):
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}")
 
 class NRU(classes.Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.nome = "NRU"
+
     def NRU(self, swap):
         while self.NRUStep(swap) : pass
 
-    def NRUStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -62,24 +73,27 @@ class NRU(classes.Algoritmo):
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
                 
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                notReferenced = [item for item in self.memoria.paginas if item["R"] == 0]
-                
-                if len(notReferenced) > 0:
-                    retirado = choice(notReferenced)
-                    retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                    notReferenced = [item for item in self.memoria.paginas if item["R"] == 0]
+                    
+                    if len(notReferenced) > 0:
+                        retirado = choice(notReferenced)
+                        retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                    else:
+                        retirado = choice( self.memoria.pagina)
+                        retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
                 else:
-                    retirado = choice( self.memoria.pagina)
-                    retirado.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
-
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
 
@@ -97,10 +111,14 @@ class NRU(classes.Algoritmo):
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}")
 
 class FIFO(classes.Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.nome = "FIFO"
+
     def FIFO(self, swap):
         while self.FIFOStep(swap) : pass
 
-    def FIFOStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -112,18 +130,21 @@ class FIFO(classes.Algoritmo):
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
                 
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                self.memoria.paginas.pop(0)
-                self.memoria.paginas.append({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                    self.memoria.paginas.pop(0)
+                    self.memoria.paginas.append({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
 
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
 
@@ -141,10 +162,14 @@ class FIFO(classes.Algoritmo):
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}")
 
 class SC(classes.Algoritmo):
+    def __init__(self, memoria):
+        super().__init__(memoria)
+        self.nome = "SC"
+
     def SC(self, swap):
         while self.SCStep(swap) : pass
 
-    def SCStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -156,24 +181,27 @@ class SC(classes.Algoritmo):
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
                 
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                while True:
-                    if self.memoria.paginas[0]["R"] == 1:
-                        self.memoria.paginas[0].update({"R": 0})
-                        self.memoria.paginas.sort(key=self.memoria.paginas[0].__eq__)
-                    else:
-                        self.memoria.paginas.pop(0)
-                        self.memoria.paginas.append({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
-                        break
+                    while True:
+                        if self.memoria.paginas[0]["R"] == 1:
+                            self.memoria.paginas[0].update({"R": 0})
+                            self.memoria.paginas.sort(key=self.memoria.paginas[0].__eq__)
+                        else:
+                            self.memoria.paginas.pop(0)
+                            self.memoria.paginas.append({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                            break
 
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
 
@@ -193,12 +221,16 @@ class SC(classes.Algoritmo):
 class Relogio(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
+        self.nome = "Relogio"
+
+    def __init__(self, memoria):
+        super().__init__(memoria)
         self.pointer = 0
 
     def Relogio(self, swap):
         while self.RelogioStep(swap) : pass
 
-    def RelogioStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -208,30 +240,33 @@ class Relogio(classes.Algoritmo):
                 self.currentPage += 1
 
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
-                
+                    
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                while True:
-                    if self.memoria.paginas[self.pointer]["R"] == 1:
-                        self.memoria.paginas[self.pointer].update({"R": 0})
-                        self.pointer += 1
-                        if self.pointer == len(self.memoria.paginas):
-                            self.pointer = 0
-                    else:
-                        self.memoria.paginas[self.pointer].update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
-                        self.pointer += 1
-                        if self.pointer == len(self.memoria.paginas):
-                            self.pointer = 0
-                        break
+                    while True:
+                        if self.memoria.paginas[self.pointer]["R"] == 1:
+                            self.memoria.paginas[self.pointer].update({"R": 0})
+                            self.pointer += 1
+                            if self.pointer == len(self.memoria.paginas):
+                                self.pointer = 0
+                        else:
+                            self.memoria.paginas[self.pointer].update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                            self.pointer += 1
+                            if self.pointer == len(self.memoria.paginas):
+                                self.pointer = 0
+                            break
 
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
 
@@ -251,6 +286,10 @@ class Relogio(classes.Algoritmo):
 class LRU(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
+        self.nome = "LRU"
+
+    def __init__(self, memoria):
+        super().__init__(memoria)
         self.matriz = np.array(np.zeros((memoria.tamanho,memoria.tamanho)))
         
         for i in range(0,len(self.memoria.paginas)):
@@ -259,7 +298,7 @@ class LRU(classes.Algoritmo):
     def LRU(self, swap):
         while self.LRUStep(swap) : pass
 
-    def LRUStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -271,23 +310,27 @@ class LRU(classes.Algoritmo):
             indexPag = next((i for i, item in enumerate(self.memoria.paginas) if item["page"] == self.currentPage), None)
                 
             if indexPag == None:
-                self.incPM()
-                
-                start_time = time()
-                
-                self.memoria.getPageFromSWAP()
+                if self.isFull():
+                    self.incPM()
+                    
+                    start_time = time()
+                    
+                    self.memoria.getPageFromSWAP()
 
-                soma_linhas = (self.matriz.sum(axis=1)).tolist()
-                menor_linha = soma_linhas.index(min(soma_linhas))
+                    soma_linhas = (self.matriz.sum(axis=1)).tolist()
+                    menor_linha = soma_linhas.index(min(soma_linhas))
 
-                menor_pagina = ([item for item in self.memoria.paginas if item["line"] == menor_linha])[0]
-                menor_pagina.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex, "line": menor_linha})
-                
-                self.UpdateLineColumn(menor_linha)
+                    menor_pagina = ([item for item in self.memoria.paginas if item["line"] == menor_linha])[0]
+                    menor_pagina.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex, "line": menor_linha})
+                    
+                    self.UpdateLineColumn(menor_linha)
 
-                end_time = time()
-                
-                self.incTimer(end_time-start_time)
+                    end_time = time()
+                    
+                    self.incTimer(end_time-start_time)
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex, 'line': len(self.memoria.paginas)})
+                    self.UpdateLineColumn(len(self.memoria.paginas)-1)
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
                 self.UpdateLineColumn(self.memoria.paginas[indexPag]["line"])
@@ -313,12 +356,16 @@ class LRU(classes.Algoritmo):
 class Envelhecimento(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
+        self.nome = "Envelhecimento"
+
+    def __init__(self, memoria):
+        super().__init__(memoria)
         self.matriz = np.array(np.zeros((memoria.tamanho,8)))
 
     def Envelhecimento(self, swap):
         while self.EnvelhecimentoStep(swap) : pass
     
-    def EnvelhecimentoStep(self, swap):
+    def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
             if self.currentIndex == "":
                 self.currentIndex = self.memoria.listaExec[0]
@@ -331,22 +378,27 @@ class Envelhecimento(classes.Algoritmo):
                 
             if indexPag == None:
                 self.incPM()
-                
+                    
                 start_time = time()
-                
+                    
                 self.memoria.getPageFromSWAP()
-                
-                soma_linhas = (self.matriz.sum(axis=1)).tolist()
-                menores_linhas = np.where(soma_linhas == np.min(soma_linhas))[0]
-                
-                pagina_index = choice(menores_linhas)
-                menor_pagina = self.memoria.paginas[pagina_index]
-                menor_pagina.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
-                
-                self.RollMatriz()
+
+                if self.isFull():
+                    
+                    soma_linhas = (self.matriz.sum(axis=1)).tolist()
+                    menores_linhas = np.where(soma_linhas == np.min(soma_linhas))[0]
+                    
+                    pagina_index = choice(menores_linhas)
+                    menor_pagina = self.memoria.paginas[pagina_index]
+
+                    menor_pagina.update({"page": self.currentPage, "R": 0, "processo": self.currentIndex})
+                    self.RollMatriz()
+                else:
+                    self.memoria.addPagina({'page': self.currentPage, 'R': 0, 'processo': self.currentIndex})
+                    self.RollMatriz()
 
                 end_time = time()
-                
+                    
                 self.incTimer(end_time-start_time)
             else:
                 self.memoria.paginas[indexPag].update({"R": 1})
@@ -362,7 +414,11 @@ class Envelhecimento(classes.Algoritmo):
         
     def RollMatriz(self):
         self.matriz = np.roll(self.matriz, shift=1, axis=1)
-        referencias = np.array(list(x["R"] for x in self.memoria.paginas))
+        referencias = list(x["R"] for x in self.memoria.paginas)
+        if len(referencias) < self.memoria.tamanho:
+            for x in range(self.memoria.tamanho-len(referencias)):
+                referencias.append(0)
+        referencias = np.array(referencias)
         referencias = referencias[...,None]
         self.matriz[:, 0] = referencias.flatten()
 

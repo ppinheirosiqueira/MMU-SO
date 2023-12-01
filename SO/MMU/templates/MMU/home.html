@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
+    <script type="text/javascript" src="{% static 'scripts/checkbox.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/MaisMenosProcessos.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/executar.js' %}"></script>
 </head>
@@ -17,14 +18,14 @@
         <div class="teste">
             <div class="algoritmos">
                 <h3>Algoritmos</h3>
-                <label for="todos"><input type="checkbox" name="todos" id="todos" checked>Todos</label>
-                <label for="envelhecimento"><input type="checkbox" name="envelhecimento" id="envelhecimento" checked>Envelhecimento</label>
-                <label for="fifo"><input type="checkbox" name="fifo" id="fifo" checked>First In - First Out</label>
-                <label for="lru"><input type="checkbox" name="lru" id="lru" checked>Menos Referenciado Recentemente</label>
-                <label for="nru"><input type="checkbox" name="nru" id="nru" checked>Não Referenciado Recentemente</label>
-                <label for="rand"><input type="checkbox" name="rand" id="rand" checked>Randômico</label>
-                <label for="relogio"><input type="checkbox" name="relogio" id="relogio" checked>Relógio</label>
-                <label for="sc"><input type="checkbox" name="sc" id="sc" checked>Segunda Chance</label>
+                <label for="todos"><input type="checkbox" name="todos" id="todos" checked onclick="setCheckboxAlgoritmos()">Todos</label>
+                <label for="rand"><input type="checkbox" name="rand" id="rand" checked class="algoritmo">Randômico</label>
+                <label for="nru"><input type="checkbox" name="nru" id="nru" checked class="algoritmo">Não Referenciado Recentemente</label>
+                <label for="fifo"><input type="checkbox" name="fifo" id="fifo" checked class="algoritmo">First In - First Out</label>
+                <label for="sc"><input type="checkbox" name="sc" id="sc" checked class="algoritmo">Segunda Chance</label>
+                <label for="relogio"><input type="checkbox" name="relogio" id="relogio" checked class="algoritmo">Relógio</label>
+                <label for="lru"><input type="checkbox" name="lru" id="lru" checked class="algoritmo">Menos Referenciado Recentemente</label>
+                <label for="envelhecimento"><input type="checkbox" name="envelhecimento" id="envelhecimento" checked class="algoritmo">Envelhecimento</label>
             </div>
             <div class="saida">
                 <h3>Saída</h3>

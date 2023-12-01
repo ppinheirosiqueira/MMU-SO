@@ -6,6 +6,17 @@
     <title>MMU - Resultado</title>
 </head>
 <body>
-    {{ saida | safe }}
+    {% for item in data %}
+        {% for key,dado in item.items %}
+            {% if key == 'size' %}
+                <h1>Memória de {{ dado }}% da SWAP</h1>
+            {% else %}
+                <h3>Algoritmo {{ key }}</h3>
+                <h5>Número de Page Miss: {{ dado.PageMiss }}</h5>
+                <h5>Tempo de Substituiçao: {{ dado.TempSubs }}s</h5>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    <a href="{% url 'home' %}">Voltar</a>
 </body>
 </html>

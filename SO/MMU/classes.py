@@ -31,7 +31,8 @@ class SWAP:
             print(f'Chave: {chave}, QtdPag: {valor.qtdPag}, PagIni: {valor.pagIni}, PagFin: {valor.pagFin}')
 
 class Memoria:
-    def __init__(self, yProcessos, sizePaginas, qtdPaginas, swapAle):
+    def __init__(self, x, yProcessos, sizePaginas, qtdPaginas, swapAle):
+        self.X = x
         self.Y = yProcessos
         self.size = sizePaginas
         self.tamanho = qtdPaginas
@@ -74,6 +75,9 @@ class Algoritmo:
 
     def incTimer(self, valor):
         self.tempo += valor
+    
+    def isFull(self):
+        return True if self.memoria.tamanho == len(self.memoria.paginas) else False
 
 def criandoSWAP(swap, vetorQtdPro,vetorTamPro):
     aux = 1
@@ -105,7 +109,7 @@ def criandoMemorias(swap, procExec, vetorX, Y, pageSize, swapAle):
         if qtdPaginas == 1:
             return None, 'Uma das memórias passadas terá espaço para só uma página!'
 
-        memoria = Memoria((Y/100), pageSize, qtdPaginas, swapAle)
+        memoria = Memoria(X, (Y/100), pageSize, qtdPaginas, swapAle)
 
         inicias = list()
         finais = list()

@@ -3,119 +3,57 @@ from . import classes, algoritmos, util
 from math import ceil
 from django.http import JsonResponse
 import json
+from django.core import serializers
 
 swap = classes.SWAP()
 memorias = []
+algoritmo = []
 procExec = []
+alg_exec = {}
+saida = {}
+resultado = {}
 
 def home(request):
     return render(request, "MMU/home.html", {})
 
 def executar(request):
+    global alg_exec
     if request.method=="POST":
         dados_do_formulario = request.POST
 
         # Pegando dados gerais dos testes
         if 'todos' in dados_do_formulario:
-            todos = True
+            alg_exec.update({'rand': True})
+            alg_exec.update({'nru': True})
+            alg_exec.update({'fifo': True})
+            alg_exec.update({'sc': True})
+            alg_exec.update({'relogio': True})
+            alg_exec.update({'lru': True})
+            alg_exec.update({'envelhecimento': True})
         else:
-            todos = False
-            if 'rand' in dados_do_formulario:
-                rand = True
-            else:
-                rand = False
-            if 'nru' in dados_do_formulario:
-                nru = True
-            else:
-                nru = False
-            if 'fifo' in dados_do_formulario:
-                fifo = True
-            else:
-                fifo = False
-            if 'sc' in dados_do_formulario:
-                sc = True
-            else:
-                sc = False
-            if 'relogio' in dados_do_formulario:
-                relogio = True
-            else:
-                relogio = False
-            if 'lru' in dados_do_formulario:
-                lru = True
-            else:
-                lru = False
-            if 'envelhecimento' in dados_do_formulario:
-                envelhecimento = True
-            else:
-                envelhecimento = False
+            alg_exec.update({'rand': True}) if 'rand' in dados_do_formulario else alg_exec.update({'rand': False})
+            alg_exec.update({'nru': True}) if 'nru' in dados_do_formulario else alg_exec.update({'nru': False})
+            alg_exec.update({'fifo': True}) if 'fifo' in dados_do_formulario else alg_exec.update({'fifo': False})
+            alg_exec.update({'sc': True}) if 'sc' in dados_do_formulario else alg_exec.update({'sc': False})
+            alg_exec.update({'relogio': True}) if 'relogio' in dados_do_formulario else alg_exec.update({'relogio': False})
+            alg_exec.update({'lru': True}) if 'lru' in dados_do_formulario else alg_exec.update({'lru': False})
+            alg_exec.update({'envelhecimento': True}) if 'envelhecimento' in dados_do_formulario else alg_exec.update({'envelhecimento': False})
 
-        if 'grafico' in dados_do_formulario:
-            grafico = True
-        else:
-            grafico = False
-        if 'tabelas' in dados_do_formulario:
-            tabelas = True
-        else:
-            tabelas = False
+        saida.update({'grafico': True}) if 'grafico' in dados_do_formulario else saida.update({'grafico': False})
+        saida.update({'tabelas': True}) if 'tabelas' in dados_do_formulario else saida.update({'tabelas': False})
+
         if 'algoritmos' in dados_do_formulario:
-            algExc = True
+            # Pagina Algoritmo
+            global algoritmo
+            global resultado
+            algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
+            for mem in memorias:
+                resultado.update({f"{mem.X}": {}})
+            return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
         else:
-            algExc = False
-
-        swap.print()
-        print(memorias)
-        print(procExec)
-        for mem in memorias:
-            if todos or rand:
-                rand_algo = algoritmos.Random(mem)
-                if algExc: 
-                    while rand_algo.RandStep(swap): pass
-                else : rand_algo.Rand(swap)
-                rand_algo.print()
-
-            if todos or nru:
-                nru_algo = algoritmos.NRU(mem)
-                if algExc: 
-                    while nru_algo.NRUStep(swap): pass
-                else : nru_algo.NRU(swap)
-                nru_algo.print()
-
-            if todos or fifo:
-                fifo_algo = algoritmos.FIFO(mem)
-                if algExc: 
-                    while fifo_algo.FIFOStep(swap): pass
-                else : fifo_algo.FIFO(swap)
-                fifo_algo.print()
-
-            if todos or sc:
-                sc_algo = algoritmos.SC(mem)
-                if algExc: 
-                    while sc_algo.SCStep(swap): pass
-                else : sc_algo.SC(swap)
-                sc_algo.print()
-
-            if todos or relogio:
-                relogio_algo = algoritmos.Relogio(mem)
-                if algExc: 
-                    while relogio_algo.RelogioStep(swap): pass
-                else : relogio_algo.Relogio(swap)
-                relogio_algo.print()
-            
-            if todos or lru:
-                lru_algo = algoritmos.LRU(mem)
-                if algExc: 
-                    while lru_algo.LRUStep(swap): pass
-                else : lru_algo.LRU(swap)
-                lru_algo.print()
-
-            if todos or envelhecimento:
-                envelhecimento_algo = algoritmos.Envelhecimento(mem)
-                if algExc: 
-                    while envelhecimento_algo.EnvelhecimentoStep(swap): pass    
-                else : envelhecimento_algo.Envelhecimento(swap)
-                envelhecimento_algo.print()
-
-    return render(request, "MMU/home.html", {})
+            # Página Resultados
+            ExecutarAlgoritmos()
+            return render(request, "MMU/resultado.html", {'resultado': resultado})
 
 def criarSwap(request, vetor_qtd_pro, vetor_tam_pro):
     global swap
@@ -134,3 +72,75 @@ def criarMemorias(request, vetorX, Y, pageSize, swapAle):
     memorias, mensagem = classes.criandoMemorias(swap, procExec, json.loads(vetorX), Y, pageSize, swapAle)
     data = {'status': mensagem}
     return JsonResponse(data)
+
+def ExecutarAlgoritmos():
+    global resultado
+
+    for mem in memorias:
+        mem_data = {
+            "size": mem.X
+        }
+
+        if alg_exec['rand']:
+            rand_algo = algoritmos.Random(mem)
+            rand_algo.Rand(swap)
+            mem_data.update({"Random": {"PageMiss": rand_algo.pageMiss, "TempSubs": rand_algo.tempo}})
+            del rand_algo
+
+        if alg_exec['nru']:
+            nru_algo = algoritmos.NRU(mem)
+            nru_algo.NRU(swap)
+            mem_data.update({"NRU": {"PageMiss": nru_algo.pageMiss, "TempSubs": nru_algo.tempo}})
+            del nru_algo
+
+        if alg_exec['fifo']:
+            fifo_algo = algoritmos.FIFO(mem)
+            fifo_algo.FIFO(swap)
+            mem_data.update({"FIFO": {"PageMiss": fifo_algo.pageMiss, "TempSubs": fifo_algo.tempo}})
+            del fifo_algo
+
+        if alg_exec['sc']:
+            sc_algo = algoritmos.SC(mem)
+            sc_algo.SC(swap)
+            mem_data.update({"SC": {"PageMiss": sc_algo.pageMiss, "TempSubs": sc_algo.tempo}})
+            del sc_algo
+
+        if alg_exec['relogio']:
+            relogio_algo = algoritmos.Relogio(mem)
+            relogio_algo.Relogio(swap)
+            mem_data.update({"Relogio": {"PageMiss": relogio_algo.pageMiss, "TempSubs": relogio_algo.tempo}})
+            del relogio_algo
+        
+        if alg_exec['lru']:
+            lru_algo = algoritmos.LRU(mem)
+            lru_algo.LRU(swap)
+            mem_data.update({"LRU": {"PageMiss": lru_algo.pageMiss, "TempSubs": lru_algo.tempo}})
+            del lru_algo
+
+        if alg_exec['envelhecimento']:
+            envelhecimento_algo = algoritmos.Envelhecimento(mem)
+            envelhecimento_algo.Envelhecimento(swap)
+            mem_data.update({"Envelhecimento": {"PageMiss": envelhecimento_algo.pageMiss, "TempSubs": envelhecimento_algo.tempo}})
+            del envelhecimento_algo
+
+        resultado.append(mem_data)
+
+def Algoritmos(request):
+    global algoritmo
+        
+    if not algoritmo[0].Step(swap):
+        return render(request, "MMU/algoritmo.html", {})
+    
+    global resultado
+    global memorias
+    
+    resultado[f"{memorias[0].X}"].update({f"{algoritmo[0].nome}": {"PageMiss": algoritmo[0].pageMiss, "TempSubs": algoritmo[0].tempo}})
+    algoritmo.pop(0)
+
+    if len(algoritmo) == 0:
+        memorias.pop(0)
+        
+        if len(memorias) == 0:
+            return
+        
+        algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)

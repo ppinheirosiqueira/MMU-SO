@@ -1,5 +1,6 @@
 import random
 from random import choice
+from . import algoritmos
 
 def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
     listaProcessos = [item.strip() for item in listaProcessos]
@@ -37,3 +38,25 @@ def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
         else:
             return '', "Um processo na lista de processos não está presente na SWAP"
     return procExec, "Sucesso"
+
+def PreencherListaAlgoritmo(memorias, alg_exec):
+    algoritmo = []
+    print(alg_exec)
+    for key,item in alg_exec.items( ):
+        if item:
+            match key:
+                case 'rand':
+                    algoritmo.append(algoritmos.Random(memorias[0]))
+                case 'nru':
+                    algoritmo.append(algoritmos.NRU(memorias[0]))
+                case 'fifo':
+                    algoritmo.append(algoritmos.FIFO(memorias[0]))
+                case 'sc':
+                    algoritmo.append(algoritmos.SC(memorias[0]))
+                case 'relogio':
+                    algoritmo.append(algoritmos.Relogio(memorias[0]))
+                case 'lru':
+                    algoritmo.append(algoritmos.LRU(memorias[0]))
+                case 'envelhecimento':
+                    algoritmo.append(algoritmos.Envelhecimento(memorias[0]))
+    return algoritmo
