@@ -49,6 +49,9 @@ def executar(request):
             algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
             for mem in memorias:
                 resultado.update({f"{mem.X}": {}})
+            memAntiga = "<div class='meomria'></div>"
+            nome, pageMiss, tempo, pagina, memNova = GenerateDataToAlgoritmo()
+            passo = "Começar"
             return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
         else:
             # Página Resultados
@@ -72,6 +75,47 @@ def criarMemorias(request, vetorX, Y, pageSize, swapAle):
     memorias, mensagem = classes.criandoMemorias(swap, procExec, json.loads(vetorX), Y, pageSize, swapAle)
     data = {'status': mensagem}
     return JsonResponse(data)
+
+def GenerateDataToAlgoritmo():
+    nome = algoritmo[0].nome
+    
+    pageMiss = algoritmo[0].pageMiss
+    
+    tempo = algoritmo[0].tempo 
+    
+    if algoritmo[0].currentPage == -1:
+        pagina = ""
+    else:
+        pagina = str(algoritmo[0].currentPage)
+    
+    memNova = """<div class='memoria'>
+        <div class='pagina'>
+            <div class='page'>
+                Página
+            </div>
+            <div class='reference'>
+                Bit R
+            </div>
+            <div class='process'>
+                Processo
+            </div>
+        </div>"""
+    for page in algoritmo[0].memoria.paginas:
+        memNova += f"""
+        <div class='pagina'>
+            <div class='page'>
+                {page["page"]}
+            </div>
+            <div class='reference'>
+                {page["R"]}
+            </div>
+            <div class='process'>
+                {page["processo"]}
+            </div>
+        </div>"""
+    memNova += "</div>"
+
+    return nome, pageMiss, tempo, pagina, memNova
 
 def ExecutarAlgoritmos():
     global resultado
