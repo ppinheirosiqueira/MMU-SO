@@ -172,4 +172,4 @@ def GererateGraphs(resultado):
     plt.xticks(y_pos, objects)
     plt.ylabel('Quantity')
     plt.title('Sales')
-    plt.savefig('static/imgs/barchart.png')
+    #plt.savefig('static/imgs/barchart.png')
