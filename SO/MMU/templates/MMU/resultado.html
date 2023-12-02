@@ -4,19 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU - Resultado</title>
+    <style>.container{display:flex;flex-direction:horizontal;}</style>
 </head>
 <body>
-    {% for item in data %}
-        {% for key,dado in item.items %}
-            {% if key == 'size' %}
-                <h1>Memória de {{ dado }}% da SWAP</h1>
-            {% else %}
-                <h3>Algoritmo {{ key }}</h3>
-                <h5>Número de Page Miss: {{ dado.PageMiss }}</h5>
-                <h5>Tempo de Substituiçao: {{ dado.TempSubs }}s</h5>
-            {% endif %}
+    <div class="container">
+        {% for key, item in resultado.items %}
+            <div class="memoriaTabela">
+                <h1>Memória de {{ key }}% da SWAP</h1>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Número de Page Miss</th>
+                            <th>Tempo de Substituição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, dado in item.items %}
+                            <tr>
+                                <td>
+                                    {{ key }}
+                                </td>
+                                <td>
+                                    {{ dado.PageMiss }}
+                                </td>
+                                <td>
+                                    {{ dado.TempSubs |floatformat:5 }}s
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endfor %}
-    {% endfor %}
+    </div>
     <a href="{% url 'home' %}">Voltar</a>
 </body>
 </html>

@@ -8,7 +8,7 @@ class Random(classes.Algoritmo):
         self.nome = "Random"
 
     def Rand(self, swap):
-        while self.RandStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -47,7 +47,7 @@ class Random(classes.Algoritmo):
             return True
         else:
             return False
-                   
+
     def print(self):
         print(f"Algoritmo: Random, PageMiss: {self.pageMiss}, Tempo de Subistituição: {self.tempo}s")
         for page in self.memoria.paginas:
@@ -59,7 +59,7 @@ class NRU(classes.Algoritmo):
         self.nome = "NRU"
 
     def NRU(self, swap):
-        while self.NRUStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -116,7 +116,7 @@ class FIFO(classes.Algoritmo):
         self.nome = "FIFO"
 
     def FIFO(self, swap):
-        while self.FIFOStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -167,7 +167,7 @@ class SC(classes.Algoritmo):
         self.nome = "SC"
 
     def SC(self, swap):
-        while self.SCStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -221,14 +221,11 @@ class SC(classes.Algoritmo):
 class Relogio(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
+        self.pointer = 0
         self.nome = "Relogio"
 
-    def __init__(self, memoria):
-        super().__init__(memoria)
-        self.pointer = 0
-
     def Relogio(self, swap):
-        while self.RelogioStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -287,16 +284,13 @@ class LRU(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
         self.nome = "LRU"
-
-    def __init__(self, memoria):
-        super().__init__(memoria)
         self.matriz = np.array(np.zeros((memoria.tamanho,memoria.tamanho)))
         
         for i in range(0,len(self.memoria.paginas)):
             self.memoria.paginas[i].update({'line': i})
 
     def LRU(self, swap):
-        while self.LRUStep(swap) : pass
+        while self.Step(swap) : pass
 
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":
@@ -357,13 +351,10 @@ class Envelhecimento(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
         self.nome = "Envelhecimento"
-
-    def __init__(self, memoria):
-        super().__init__(memoria)
         self.matriz = np.array(np.zeros((memoria.tamanho,8)))
 
     def Envelhecimento(self, swap):
-        while self.EnvelhecimentoStep(swap) : pass
+        while self.Step(swap) : pass
     
     def Step(self, swap):
         if len(self.memoria.listaExec) > 0 or self.currentIndex != "":

@@ -8,7 +8,7 @@
 <body>
     <div class="algoritmo">
         <div class="nome">Algoritmo {{ nome }}</div>
-        <div class="pagemiss">Númeor de Page Miss: {{ pageMiss }}</div>
+        <div class="pagemiss">Número de Page Miss: {{ pageMiss }}</div>
         <div class="tempo">Tempo de Substituição: {{ tempo }}</div>
         <div class="memorias">
             <div class="memAntiga">
@@ -22,6 +22,6 @@
             </div>
         </div>
     </div>
-    <button>{{ passo }}</button>
+    <a href="{% url 'PassoAPasso' %}">{{ passo }}</a>
 </body>
 </html>

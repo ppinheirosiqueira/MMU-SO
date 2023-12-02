@@ -12,7 +12,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const formulario = document.getElementById('MMUForm')
 
     formulario.addEventListener('submit', async function (event) {
-        event.preventDefault() // Evita o envio padrão do formulário
+        event.preventDefault()
+
+        var algoritmos = document.getElementsByClassName('algoritmo')
+        aux = 0
+        for(let alg of algoritmos){
+            if (alg.checked){
+                break
+            }
+            else{
+                aux = aux + 1
+            }
+            if (aux == 7){
+                alert("Você quer rodar o que?")
+                return
+            }
+        }
+
+        var saida = document.getElementsByClassName('saidaOption')
+        aux = 0
+        for(let mostrar of saida){
+            if (mostrar.checked){
+                break
+            }
+            else{
+                aux = aux + 1
+            }
+            if (aux == 3){
+                alert("Você quer rodar para não mostrar nada?")
+                return
+            }
+        }
 
         const vetorQtdPro = []
         const vetorTamPro = []
@@ -22,13 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (elemento.name.startsWith('qtdPro') && elemento.name.slice(6).match(/^\d+$/)) {
                 const numeroProcesso = elemento.name.slice(6)
                 vetorQtdPro.push(elemento.value)
-
-                // Construa o nome do campo "tamPro" correspondente
                 const nomeCampoTamPro = 'tamPro' + numeroProcesso
-
-                // Encontre o elemento correspondente ao campo "tamPro"
                 const elementoTamPro = formulario.elements[nomeCampoTamPro]
-
                 if (elementoTamPro) {
                     vetorTamPro.push(elementoTamPro.value)
                 }
@@ -69,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const vetorX = []
 
-        // Itera sobre os elementos do formulário
         for (const elemento of formulario.elements) {
             if (elemento.name.startsWith('X') && elemento.name.slice(1).match(/^\d+$/)) {
                 const numero = elemento.name.slice(1)

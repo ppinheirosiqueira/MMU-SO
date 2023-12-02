@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from . import classes, algoritmos, util
-from math import ceil
 from django.http import JsonResponse
 import json
-from django.core import serializers
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 swap = classes.SWAP()
 memorias = []
@@ -18,6 +18,11 @@ def home(request):
 
 def executar(request):
     global alg_exec
+    global resultado
+    global saida
+    alg_exec.clear()
+    resultado.clear()
+    saida.clear()
     if request.method=="POST":
         dados_do_formulario = request.POST
 
@@ -43,20 +48,14 @@ def executar(request):
         saida.update({'tabelas': True}) if 'tabelas' in dados_do_formulario else saida.update({'tabelas': False})
 
         if 'algoritmos' in dados_do_formulario:
-            # Pagina Algoritmo
             global algoritmo
-            global resultado
             algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
             for mem in memorias:
                 resultado.update({f"{mem.X}": {}})
-            memAntiga = "<div class='meomria'></div>"
-            nome, pageMiss, tempo, pagina, memNova = GenerateDataToAlgoritmo()
-            passo = "Começar"
-            return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
-        else:
-            # Página Resultados
-            ExecutarAlgoritmos()
-            return render(request, "MMU/resultado.html", {'resultado': resultado})
+            return HttpResponseRedirect(reverse('PassoAPasso',None))
+            
+        resultado = util.ExecutarAlgoritmos(memorias,alg_exec,swap,resultado)
+        return render(request, "MMU/resultado.html", {'resultado': resultado})
 
 def criarSwap(request, vetor_qtd_pro, vetor_tam_pro):
     global swap
@@ -76,107 +75,16 @@ def criarMemorias(request, vetorX, Y, pageSize, swapAle):
     data = {'status': mensagem}
     return JsonResponse(data)
 
-def GenerateDataToAlgoritmo():
-    nome = algoritmo[0].nome
-    
-    pageMiss = algoritmo[0].pageMiss
-    
-    tempo = algoritmo[0].tempo 
-    
-    if algoritmo[0].currentPage == -1:
-        pagina = ""
-    else:
-        pagina = str(algoritmo[0].currentPage)
-    
-    memNova = """<div class='memoria'>
-        <div class='pagina'>
-            <div class='page'>
-                Página
-            </div>
-            <div class='reference'>
-                Bit R
-            </div>
-            <div class='process'>
-                Processo
-            </div>
-        </div>"""
-    for page in algoritmo[0].memoria.paginas:
-        memNova += f"""
-        <div class='pagina'>
-            <div class='page'>
-                {page["page"]}
-            </div>
-            <div class='reference'>
-                {page["R"]}
-            </div>
-            <div class='process'>
-                {page["processo"]}
-            </div>
-        </div>"""
-    memNova += "</div>"
-
-    return nome, pageMiss, tempo, pagina, memNova
-
-def ExecutarAlgoritmos():
-    global resultado
-
-    for mem in memorias:
-        mem_data = {
-            "size": mem.X
-        }
-
-        if alg_exec['rand']:
-            rand_algo = algoritmos.Random(mem)
-            rand_algo.Rand(swap)
-            mem_data.update({"Random": {"PageMiss": rand_algo.pageMiss, "TempSubs": rand_algo.tempo}})
-            del rand_algo
-
-        if alg_exec['nru']:
-            nru_algo = algoritmos.NRU(mem)
-            nru_algo.NRU(swap)
-            mem_data.update({"NRU": {"PageMiss": nru_algo.pageMiss, "TempSubs": nru_algo.tempo}})
-            del nru_algo
-
-        if alg_exec['fifo']:
-            fifo_algo = algoritmos.FIFO(mem)
-            fifo_algo.FIFO(swap)
-            mem_data.update({"FIFO": {"PageMiss": fifo_algo.pageMiss, "TempSubs": fifo_algo.tempo}})
-            del fifo_algo
-
-        if alg_exec['sc']:
-            sc_algo = algoritmos.SC(mem)
-            sc_algo.SC(swap)
-            mem_data.update({"SC": {"PageMiss": sc_algo.pageMiss, "TempSubs": sc_algo.tempo}})
-            del sc_algo
-
-        if alg_exec['relogio']:
-            relogio_algo = algoritmos.Relogio(mem)
-            relogio_algo.Relogio(swap)
-            mem_data.update({"Relogio": {"PageMiss": relogio_algo.pageMiss, "TempSubs": relogio_algo.tempo}})
-            del relogio_algo
-        
-        if alg_exec['lru']:
-            lru_algo = algoritmos.LRU(mem)
-            lru_algo.LRU(swap)
-            mem_data.update({"LRU": {"PageMiss": lru_algo.pageMiss, "TempSubs": lru_algo.tempo}})
-            del lru_algo
-
-        if alg_exec['envelhecimento']:
-            envelhecimento_algo = algoritmos.Envelhecimento(mem)
-            envelhecimento_algo.Envelhecimento(swap)
-            mem_data.update({"Envelhecimento": {"PageMiss": envelhecimento_algo.pageMiss, "TempSubs": envelhecimento_algo.tempo}})
-            del envelhecimento_algo
-
-        resultado.append(mem_data)
-
-def Algoritmos(request):
+def PassoAPasso(request):
     global algoritmo
-        
-    if not algoritmo[0].Step(swap):
-        return render(request, "MMU/algoritmo.html", {})
-    
     global resultado
     global memorias
+
+    if algoritmo[0].Step(swap):
+        nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+        passo = "Próximo Passo"
+        memAntiga = "Oi"
+        return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
     
     resultado[f"{memorias[0].X}"].update({f"{algoritmo[0].nome}": {"PageMiss": algoritmo[0].pageMiss, "TempSubs": algoritmo[0].tempo}})
     algoritmo.pop(0)
@@ -185,6 +93,10 @@ def Algoritmos(request):
         memorias.pop(0)
         
         if len(memorias) == 0:
-            return
-        
+            return render(request, "MMU/resultado.html", {'resultado': resultado})
+
         algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
+    nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+    passo = "Começar Próximo Algoritmo"
+    memAntiga = "Oi"
+    return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
