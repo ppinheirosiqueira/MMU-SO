@@ -1,6 +1,9 @@
 import random
 from random import choice
 from . import algoritmos
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
     listaProcessos = [item.strip() for item in listaProcessos]
@@ -122,31 +125,51 @@ def GenerateDataToAlgoritmo(algoritmo):
     else:
         pagina = str(algoritmo.currentPage)
     
-    memNova = """<div class='memoria'>
-        <div class='pagina'>
-            <div class='page'>
-                Página
-            </div>
-            <div class='reference'>
-                Bit R
-            </div>
-            <div class='process'>
-                Processo
-            </div>
-        </div>"""
-    for page in algoritmo.memoria.paginas:
-        memNova += f"""
-        <div class='pagina'>
-            <div class='page'>
-                {page["page"]}
-            </div>
-            <div class='reference'>
-                {page["R"]}
-            </div>
-            <div class='process'>
-                {page["processo"]}
-            </div>
-        </div>"""
-    memNova += "</div>"
+    memNova = GenerateMemoryHtml(algoritmo)
 
     return nome, pageMiss, tempo, pagina, memNova
+
+def GenerateMemoryHtml(algoritmo):
+    htmlMemoria = "<table class='memoria'>"
+    
+    htmlMemoria += "<tr class='pagina'><th>Página</th>"
+    
+    for page in algoritmo.memoria.paginas:
+        htmlMemoria += f"<td>{page["page"]}</td>"
+    
+    if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
+        for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
+            htmlMemoria += "<td>X</td>"
+
+    htmlMemoria += "</tr>"
+
+    htmlMemoria += "<tr class='bit'><th>R Bit</th>"
+    for page in algoritmo.memoria.paginas:
+        htmlMemoria += f"<td>{page["R"]}</td>"
+    
+    if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
+        for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
+            htmlMemoria += "<td>X</td>"
+    htmlMemoria += "</tr>"
+    
+    htmlMemoria += "<tr class='processo'><th>Processo</th>"
+    for page in algoritmo.memoria.paginas:
+        htmlMemoria += f"<td>{page["processo"]}</td>"
+    
+    if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
+        for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
+            htmlMemoria += "<td>X</td>"
+    htmlMemoria += "</tr>"
+    
+    htmlMemoria += "</table>"
+    return htmlMemoria
+
+def GererateGraphs(resultado):
+    objects = ['12/10/2019','12/11/2020','15/10/2020']
+    y_pos = [0, 1, 2]
+    qty = [10,20,25]
+    plt.bar(y_pos, qty, align='center', alpha=0.5)
+    plt.xticks(y_pos, objects)
+    plt.ylabel('Quantity')
+    plt.title('Sales')
+    plt.savefig('static/imgs/barchart.png')

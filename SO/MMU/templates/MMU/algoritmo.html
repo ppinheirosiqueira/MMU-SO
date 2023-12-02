@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/memoria.css">
+    <title>MMU - Algoritmos</title>
 </head>
 <body>
     <div class="algoritmo">
         <div class="nome">Algoritmo {{ nome }}</div>
         <div class="pagemiss">Número de Page Miss: {{ pageMiss }}</div>
-        <div class="tempo">Tempo de Substituição: {{ tempo }}</div>
+        <div class="tempo">Tempo de Substituição: {{ tempo |floatformat:6 }}s</div>
         <div class="memorias">
+            Memória Anterior
             <div class="memAntiga">
                 {{ memAntiga | safe }}
             </div>
             <div class="proximaPage">
-                Página Colocada{{ pagina }}
+                Página Referenciada {{ pagina }}
             </div>
+            Memória Atual
             <div class="memNova">
                 {{ memNova | safe }}
             </div>
         </div>
+        <button class="passo"><a href="{% url 'PassoAPasso' %}">{{ passo }}</a></button>
     </div>
-    <a href="{% url 'PassoAPasso' %}">{{ passo }}</a>
 </body>
 </html>

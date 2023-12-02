@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU - Resultado</title>
-    <style>.container{display:flex;flex-direction:horizontal;}</style>
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/resultado.css">
+    
 </head>
 <body>
     <div class="container">
@@ -29,7 +31,7 @@
                                     {{ dado.PageMiss }}
                                 </td>
                                 <td>
-                                    {{ dado.TempSubs |floatformat:5 }}s
+                                    {{ dado.TempSubs |floatformat:6 }}s
                                 </td>
                             </tr>
                         {% endfor %}
@@ -37,7 +39,8 @@
                 </table>
             </div>
         {% endfor %}
+        <img src="{% static 'imgs/barchat.png' %}">
     </div>
-    <a href="{% url 'home' %}">Voltar</a>
+    <button class="voltar"><a href="{% url 'home' %}">Voltar</a></button>
 </body>
 </html>

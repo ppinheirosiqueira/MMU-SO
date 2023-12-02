@@ -1,0 +1,31 @@
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.voltar {
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.container{
+    display:flex;
+    flex-direction:horizontal;
+    margin: 20px;
+    font-size: 16px;
+}
+
+table, th td {
+    padding: 5px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+tr:nth-child(odd) {
+    background-color: #dbdbdb;
+}

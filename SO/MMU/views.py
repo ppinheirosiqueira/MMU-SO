@@ -55,6 +55,7 @@ def executar(request):
             return HttpResponseRedirect(reverse('PassoAPasso',None))
             
         resultado = util.ExecutarAlgoritmos(memorias,alg_exec,swap,resultado)
+        util.GererateGraphs(resultado)
         return render(request, "MMU/resultado.html", {'resultado': resultado})
 
 def criarSwap(request, vetor_qtd_pro, vetor_tam_pro):
@@ -80,10 +81,10 @@ def PassoAPasso(request):
     global resultado
     global memorias
 
+    memAntiga = util.GenerateMemoryHtml(algoritmo[0])
     if algoritmo[0].Step(swap):
         nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
         passo = "Próximo Passo"
-        memAntiga = "Oi"
         return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
     
     resultado[f"{memorias[0].X}"].update({f"{algoritmo[0].nome}": {"PageMiss": algoritmo[0].pageMiss, "TempSubs": algoritmo[0].tempo}})
@@ -93,10 +94,12 @@ def PassoAPasso(request):
         memorias.pop(0)
         
         if len(memorias) == 0:
+            util.GererateGraphs(resultado)
             return render(request, "MMU/resultado.html", {'resultado': resultado})
 
         algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
+        
     nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
     passo = "Começar Próximo Algoritmo"
-    memAntiga = "Oi"
+    memAntiga = ""
     return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
