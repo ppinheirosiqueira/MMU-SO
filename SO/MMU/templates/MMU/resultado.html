@@ -9,37 +9,52 @@
     
 </head>
 <body>
-    <div class="container">
-        {% for key, item in resultado.items %}
-            <div class="memoriaTabela">
-                <h1>Memória de {{ key }}% da SWAP</h1>
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Algoritmo</th>
-                            <th>Número de Page Miss</th>
-                            <th>Tempo de Substituição</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, dado in item.items %}
-                            <tr>
-                                <td>
-                                    {{ key }}
-                                </td>
-                                <td>
-                                    {{ dado.PageMiss }}
-                                </td>
-                                <td>
-                                    {{ dado.TempSubs |floatformat:6 }}s
-                                </td>
-                            </tr>
+    <div class=".container">
+        <div class="memoriasTabela">
+            {% for key, item in resultado.items %}
+                {% if key != 'graphs' %}
+                    <div class="tabela">
+                        <h1>Memória de {{ key }}% da SWAP</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Algoritmo</th>
+                                    <th>Número de Page Miss</th>
+                                    <th>Tempo de Substituição</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for chave, dado in item.items %}
+                                    <tr>
+                                        <td>
+                                            {{ chave }}
+                                        </td>
+                                        <td>
+                                            {{ dado.PageMiss }}
+                                        </td>
+                                        <td>
+                                            {{ dado.TempSubs |floatformat:6 }}s
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="memoriasGraficos">
+            {% for key, item in resultado.graphs.items %}
+                <div class="graficos">
+                    <h1>Memória de {{ key }}% da SWAP</h1>
+                    <div class="page_temp">
+                        {% for grafico in item.values %}
+                            <div class="grafico">{{ grafico | safe }}</div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endfor %}
-        <!--<img src="{% static 'imgs/barchat.png' %}">-->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
     <button class="voltar"><a href="{% url 'home' %}">Voltar</a></button>
 </body>

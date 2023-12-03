@@ -55,7 +55,7 @@ def executar(request):
             return HttpResponseRedirect(reverse('PassoAPasso',None))
             
         resultado = util.ExecutarAlgoritmos(memorias,alg_exec,swap,resultado)
-        util.GererateGraphs(resultado)
+        resultado = util.GererateGraphs(resultado)
         return render(request, "MMU/resultado.html", {'resultado': resultado})
 
 def criarSwap(request, vetor_qtd_pro, vetor_tam_pro):
@@ -94,7 +94,7 @@ def PassoAPasso(request):
         memorias.pop(0)
         
         if len(memorias) == 0:
-            util.GererateGraphs(resultado)
+            resultado = util.GererateGraphs(resultado)
             return render(request, "MMU/resultado.html", {'resultado': resultado})
 
         algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)

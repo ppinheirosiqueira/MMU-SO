@@ -9,11 +9,24 @@ a {
     font-size: 16px;
 }
 
-.container{
+.memoriasTabela{
     display:flex;
     flex-direction:horizontal;
     margin: 20px;
     font-size: 16px;
+}
+
+.memoriasGraficos{
+    display: flex;
+    flex-direction:horizontal;
+    margin: 20px;
+    font-size: 16px;
+}
+
+.page_temp {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
 }
 
 table, th td {

@@ -1,9 +1,9 @@
 import random
 from random import choice
 from . import algoritmos
-import matplotlib
-matplotlib.use('Agg')
-from matplotlib import pyplot as plt
+import plotly.offline as plot
+import plotly.graph_objects as go
+import numpy as np
 
 def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
     listaProcessos = [item.strip() for item in listaProcessos]
@@ -165,11 +165,46 @@ def GenerateMemoryHtml(algoritmo):
     return htmlMemoria
 
 def GererateGraphs(resultado):
-    objects = ['12/10/2019','12/11/2020','15/10/2020']
-    y_pos = [0, 1, 2]
-    qty = [10,20,25]
-    plt.bar(y_pos, qty, align='center', alpha=0.5)
-    plt.xticks(y_pos, objects)
-    plt.ylabel('Quantity')
-    plt.title('Sales')
-    #plt.savefig('static/imgs/barchart.png')
+    graphs = {}
+    width = 500
+    height = 300
+
+    page = 'Número de Page Miss por Algoritmo'
+    temp = 'Tempo de substituição por Algoritmo'
+    for key,items in resultado.items():
+        graphs.update({f'{key}': {}})
+        data_nome = []
+        data_page = []
+        data_temp = []
+
+        for chave,item in items.items():
+            data_nome.append(chave)
+            data_page.append(item['PageMiss'])
+            data_temp.append(item['TempSubs']*1000)
+
+        fig_page = go.Figure(data = go.Bar(name = page, x = data_page, y = data_nome, orientation = 'h', 
+                                           marker=dict(color='rgba(207, 72, 72, 0.6)', line=dict(color='rgba(207, 72, 72, 1)', width=1))))
+        fig_temp = go.Figure(data = go.Bar(name = temp, x = data_temp, y = data_nome, orientation = 'h', 
+                                           marker = dict(color='rgba(107, 178, 144, 0.6)', line=dict(color='rgba(107, 178, 144, 1)', width=1))))
+        
+        fig_page.update_layout(title = page,
+                               xaxis_title = 'Page Miss',
+                               yaxis = {'categoryorder': 'total ascending'},
+                               paper_bgcolor='rgb(231, 231, 255)',
+                               plot_bgcolor='rgb(231, 231, 255)',
+                               margin=dict(l=120, r=20, t=80, b=50),
+                               width=width, height=height)
+        fig_temp.update_layout(title = temp,
+                               xaxis_title = 'Tempo de Substituição(ms)',
+                               yaxis = {'categoryorder': 'total ascending'},
+                               paper_bgcolor = 'rgb(231, 231, 255)',
+                               plot_bgcolor = 'rgb(231, 231, 255)',
+                               margin=dict(l=120, r=20, t=80, b=50),
+                               width = width, height = height)
+        
+        graph_page = plot.plot({'data': fig_page}, output_type='div')
+        graph_temp = plot.plot({'data': fig_temp}, output_type='div')
+        graphs[f"{key}"].update({'page': graph_page, 'temp': graph_temp})
+
+    resultado.update({'graphs': graphs})
+    return resultado
