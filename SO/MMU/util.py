@@ -44,7 +44,6 @@ def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
 
 def PreencherListaAlgoritmo(memorias, alg_exec):
     algoritmo = []
-    print(alg_exec)
     for key,item in alg_exec.items( ):
         if item:
             match key:
@@ -135,7 +134,7 @@ def GenerateMemoryHtml(algoritmo):
     htmlMemoria += "<tr class='pagina'><th>Página</th>"
     
     for page in algoritmo.memoria.paginas:
-        htmlMemoria += f"<td>{page["page"]}</td>"
+        htmlMemoria += f"<td>{page['page']}</td>"
     
     if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
         for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
@@ -145,7 +144,7 @@ def GenerateMemoryHtml(algoritmo):
 
     htmlMemoria += "<tr class='bit'><th>R Bit</th>"
     for page in algoritmo.memoria.paginas:
-        htmlMemoria += f"<td>{page["R"]}</td>"
+        htmlMemoria += f"<td>{page['R']}</td>"
     
     if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
         for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
@@ -154,7 +153,7 @@ def GenerateMemoryHtml(algoritmo):
     
     htmlMemoria += "<tr class='processo'><th>Processo</th>"
     for page in algoritmo.memoria.paginas:
-        htmlMemoria += f"<td>{page["processo"]}</td>"
+        htmlMemoria += f"<td>{page['processo']}</td>"
     
     if len(algoritmo.memoria.paginas) < algoritmo.memoria.tamanho:
         for x in range(algoritmo.memoria.tamanho - len(algoritmo.memoria.paginas)):
@@ -183,24 +182,24 @@ def GererateGraphs(resultado):
             data_temp.append(item['TempSubs']*1000)
 
         fig_page = go.Figure(data = go.Bar(name = page, x = data_page, y = data_nome, orientation = 'h', 
-                                           marker=dict(color='rgba(207, 72, 72, 0.6)', line=dict(color='rgba(207, 72, 72, 1)', width=1))))
+                                            marker=dict(color='rgba(207, 72, 72, 0.6)', line=dict(color='rgba(207, 72, 72, 1)', width=1))))
         fig_temp = go.Figure(data = go.Bar(name = temp, x = data_temp, y = data_nome, orientation = 'h', 
-                                           marker = dict(color='rgba(107, 178, 144, 0.6)', line=dict(color='rgba(107, 178, 144, 1)', width=1))))
+                                            marker = dict(color='rgba(107, 178, 144, 0.6)', line=dict(color='rgba(107, 178, 144, 1)', width=1))))
         
         fig_page.update_layout(title = page,
-                               xaxis_title = 'Page Miss',
-                               yaxis = {'categoryorder': 'total ascending'},
-                               paper_bgcolor='rgb(231, 231, 255)',
-                               plot_bgcolor='rgb(231, 231, 255)',
-                               margin=dict(l=120, r=20, t=80, b=50),
-                               width=width, height=height)
+                                xaxis_title = 'Page Miss',
+                                yaxis = {'categoryorder': 'total ascending'},
+                                paper_bgcolor='rgb(231, 231, 255)',
+                                plot_bgcolor='rgb(231, 231, 255)',
+                                margin=dict(l=120, r=20, t=80, b=50),
+                                width=width, height=height)
         fig_temp.update_layout(title = temp,
-                               xaxis_title = 'Tempo de Substituição(ms)',
-                               yaxis = {'categoryorder': 'total ascending'},
-                               paper_bgcolor = 'rgb(231, 231, 255)',
-                               plot_bgcolor = 'rgb(231, 231, 255)',
-                               margin=dict(l=120, r=20, t=80, b=50),
-                               width = width, height = height)
+                                xaxis_title = 'Tempo de Substituição(ms)',
+                                yaxis = {'categoryorder': 'total ascending'},
+                                paper_bgcolor = 'rgb(231, 231, 255)',
+                                plot_bgcolor = 'rgb(231, 231, 255)',
+                                margin=dict(l=120, r=20, t=80, b=50),
+                                width = width, height = height)
         
         graph_page = plot.plot({'data': fig_page}, output_type='div')
         graph_temp = plot.plot({'data': fig_temp}, output_type='div')

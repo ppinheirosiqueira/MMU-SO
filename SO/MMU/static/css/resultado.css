@@ -1,31 +1,37 @@
 a {
     text-decoration: none;
     color: white;
-}
-
-.voltar {
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
     margin-top: 20px;
     margin-left: 20px;
     font-size: 16px;
 }
 
+a:hover {
+    background-color: #0056b3;
+}
+
 .memoriasTabela{
     display:flex;
-    flex-direction:horizontal;
     margin: 20px;
     font-size: 16px;
+    gap: 2rem;
 }
 
 .memoriasGraficos{
-    display: flex;
-    flex-direction:horizontal;
     margin: 20px;
     font-size: 16px;
 }
 
 .page_temp {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 550px 550px;
     gap: 10px;
 }
 
