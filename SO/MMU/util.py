@@ -44,7 +44,6 @@ def criarListaProcessos(aleatorio, lote, qtdProExe, swap, listaProcessos):
 
 def PreencherListaAlgoritmo(memorias, alg_exec):
     algoritmo = []
-    print(alg_exec)
     for key,item in alg_exec.items( ):
         if item:
             match key:

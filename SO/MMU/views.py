@@ -52,6 +52,7 @@ def executar(request):
             algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
             for mem in memorias:
                 resultado.update({f"{mem.X}": {}})
+            request.session['Primeiro Passo'] = True
             return HttpResponseRedirect(reverse('PassoAPasso',None))
             
         resultado = util.ExecutarAlgoritmos(memorias,alg_exec,swap,resultado)
@@ -81,6 +82,13 @@ def PassoAPasso(request):
     global memorias
 
     memAntiga = util.GenerateMemoryHtml(algoritmo[0])
+
+    if request.session['Primeiro Passo']:
+        nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+        passo = "Primeiro Passo"
+        request.session['Primeiro Passo'] = False
+        return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
+
     if algoritmo[0].Step(swap):
         nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
         passo = "Próximo Passo"
@@ -99,7 +107,7 @@ def PassoAPasso(request):
         
     nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
     passo = "Começar Próximo Algoritmo"
-    memAntiga = ""
+    memAntiga = util.GenerateMemoryHtml(algoritmo[0])
     return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
 
 def Resultados(request):
