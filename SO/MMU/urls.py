@@ -11,4 +11,5 @@ urlpatterns = [
     path('criarSwap/<str:vetor_qtd_pro>/<str:vetor_tam_pro>/', views.criarSwap, name='criarSwap'),
     path('criarListaProcessos/<int:aleatorio>/<int:lote>/<int:qtdProExe>/<str:listaProcessos>', views.criarListaProcessos, name='CriarListaProcessos'),
     path('criarMemorias/<str:vetorX>/<int:Y>/<int:pageSize>/<int:swapAle>', views.criarMemorias, name='criarMemorias'),
+    path('resultado', views.Resultados, name="Resultados"),
 ]
