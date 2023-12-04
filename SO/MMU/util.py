@@ -170,8 +170,10 @@ def GererateGraphs(resultado):
 
     page = 'Número de Page Miss por Algoritmo'
     temp = 'Tempo de substituição por Algoritmo'
+    memo = []
     for key,items in resultado.items():
         graphs.update({f'{key}': {}})
+        memo.append(key)
         data_nome = []
         data_page = []
         data_temp = []
@@ -204,6 +206,33 @@ def GererateGraphs(resultado):
         graph_page = plot.plot({'data': fig_page}, output_type='div')
         graph_temp = plot.plot({'data': fig_temp}, output_type='div')
         graphs[f"{key}"].update({'page': graph_page, 'temp': graph_temp})
+
+    if len(resultado.items()) > 1:
+        linha = {}
+
+        for algoritmo in data_nome:
+            linha.update({algoritmo : list()})
+
+        for key,items in resultado.items():
+            for chave,item in items.items():
+                linha[chave].append(item['PageMiss'])
+
+        fig = go.Figure()
+
+        for chave, valores in linha.items():
+            fig.add_trace(go.Scatter(x=memo, y=valores, mode='lines+markers', name=chave))
+
+        fig.update_layout(title = 'Page Miss x Tamanho da Memória',
+                                xaxis_title = 'Tamanho da Memória (%)',
+                                yaxis = {'categoryorder': 'total ascending'},
+                                yaxis_title = 'Qtd Page Miss',
+                                paper_bgcolor = 'rgb(231, 231, 255)',
+                                plot_bgcolor = 'rgb(231, 231, 255)',
+                                margin=dict(l=120, r=20, t=80, b=50),
+                                width = 2*width, height = 2*height)
+        graph_line = plot.plot({'data': fig}, output_type='div')
+
+        resultado.update({'line': graph_line})
 
     resultado.update({'graphs': graphs})
     return resultado

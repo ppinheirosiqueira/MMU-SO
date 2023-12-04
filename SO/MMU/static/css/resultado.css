@@ -48,3 +48,7 @@ th, td {
 tr:nth-child(odd) {
     background-color: #dbdbdb;
 }
+
+.linhaGrafico{
+    margin: 20px;
+}

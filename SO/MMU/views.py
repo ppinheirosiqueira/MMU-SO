@@ -120,4 +120,5 @@ def Resultados(request):
         'resultado': resultado,
         'tabela': saida['tabelas'],
         'graficos': saida['graficos'],
+        'linha': 'line' in resultado,
         })

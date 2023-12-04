@@ -1,11 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU - Resultado</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/resultado.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/resultado.css' %}?v=1.0">
     
 </head>
 <body>
@@ -13,7 +15,7 @@
         {% if tabela %}
             <div class="memoriasTabela">
                 {% for key, item in resultado.items %}
-                    {% if key != 'graphs' %}
+                    {% if key != 'graphs' and key != 'line' %}
                         <div class="tabela">
                             <h1>Memória de {{ key }}% da SWAP</h1>
                             <table>
@@ -59,6 +61,11 @@
                 {% endfor %}
             </div>
         {% endif %}
+        <div class="linhaGrafico">
+            {% if linha %}
+                {{ resultado.line | safe }}
+            {% endif %}
+        </div>
     </div>
     <a href="{% url 'home' %}">Voltar</a>
 </body>
