@@ -111,18 +111,16 @@ def criandoMemorias(swap, procExec, vetorX, Y, pageSize, swapAle):
 
         memoria = Memoria(X, (Y/100), pageSize, qtdPaginas, swapAle)
 
-        inicias = list()
-        finais = list()
+        adicionados = list()
         for proc in procExec:
             processo = swap.findProcesso(proc)
             qtdPagProc = ceil(processo.qtdPag * memoria.Y)
-            if len(memoria.paginas) + qtdPagProc <= memoria.tamanho:
-                for i in range(0,qtdPagProc):
-                    memoria.addPagina({'page': processo.pagIni + i, 'R': 0, 'processo': proc})
-                inicias.append(proc)
-            else:
-                finais.append(proc)
-        memoria.addListaExec(inicias + finais)
+            if not(proc in adicionados):
+                if len(memoria.paginas) + qtdPagProc <= memoria.tamanho:
+                    for i in range(0,qtdPagProc):
+                        memoria.addPagina({'page': processo.pagIni + i, 'R': 0, 'processo': proc})
+                    adicionados.append(proc)
+        memoria.addListaExec(procExec)
 
         memorias.append(memoria)
     
