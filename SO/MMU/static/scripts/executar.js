@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else{
                 aux = aux + 1
             }
-            if (aux == 7){
+            if (aux == algoritmos.length){
                 alert("Você quer rodar o que?")
                 return
             }
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else{
                 aux = aux + 1
             }
-            if (aux == 3){
+            if (aux == saida.length){
                 alert("Você quer rodar para não mostrar nada?")
                 return
             }
