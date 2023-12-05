@@ -101,7 +101,10 @@ def PassoAPasso(request):
         memorias.pop(0)
         
         if len(memorias) == 0:
-            return HttpResponseRedirect(reverse('Resultados',None))
+            if saida['graficos'] or saida['tabelas']:
+                return HttpResponseRedirect(reverse('Resultados',None))
+            else:
+                return HttpResponseRedirect(reverse('home',None))
 
         algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
         

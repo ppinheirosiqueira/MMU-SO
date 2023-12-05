@@ -119,12 +119,13 @@ def GenerateDataToAlgoritmo(algoritmo):
     
     tempo = algoritmo.tempo 
     
-    lista = ""
+    lista = "<table class='lista'><tr>"
     for proc in algoritmo.memoria.listaExec:
         if proc == algoritmo.memoria.listaExec[0]:
-            lista += proc
+            lista += f"<td class='executando'>{proc}</td>"
             continue
-        lista += f', {proc}'
+        lista += f'<td>{proc}</td>'
+    lista += "</tr></table>"
         
 
     if algoritmo.currentPage == -1:
