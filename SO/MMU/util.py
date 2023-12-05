@@ -118,15 +118,6 @@ def GenerateDataToAlgoritmo(algoritmo):
     pageMiss = algoritmo.pageMiss
     
     tempo = algoritmo.tempo 
-    
-    lista = "<table class='lista'><tr>"
-    for proc in algoritmo.memoria.listaExec:
-        if proc == algoritmo.memoria.listaExec[0]:
-            lista += f"<td class='executando'>{proc}</td>"
-            continue
-        lista += f'<td>{proc}</td>'
-    lista += "</tr></table>"
-        
 
     if algoritmo.currentPage == -1:
         pagina = ""
@@ -135,7 +126,18 @@ def GenerateDataToAlgoritmo(algoritmo):
     
     memNova = GenerateMemoryHtml(algoritmo)
 
-    return nome, pageMiss, tempo, lista, pagina, memNova
+    return nome, pageMiss, tempo, pagina, memNova
+
+def GenerateListHTML(lista,index):
+    listaHTML = "<table class='lista'><tr>"
+    for chave, proc in enumerate(lista):
+        if chave == index:
+            listaHTML += f"<td class='executando'>{proc}</td>"
+        else:
+            listaHTML += f'<td>{proc}</td>'
+    listaHTML += "</tr></table>"
+
+    return listaHTML
 
 def GenerateMemoryHtml(algoritmo):
     htmlMemoria = "<table class='memoria'>"

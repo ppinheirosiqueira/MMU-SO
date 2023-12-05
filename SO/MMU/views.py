@@ -80,22 +80,36 @@ def PassoAPasso(request):
     global algoritmo
     global resultado
     global memorias
+    global index
 
     memAntiga = util.GenerateMemoryHtml(algoritmo[0])
+    aux = len(algoritmo[0].memoria.listaExec)
 
     if request.session['Primeiro Passo']:
-        nome, pageMiss, tempo, lista, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+        nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
         passo = "Primeiro Passo"
         request.session['Primeiro Passo'] = False
+
+        index = 0
+        lista = util.GenerateListHTML(procExec,index)
+        if len(algoritmo[0].memoria.listaExec) < aux:
+            index += 1
+
         return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'lista': lista, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
 
     if algoritmo[0].Step(swap):
-        nome, pageMiss, tempo, lista, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+        nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
         passo = "Próximo Passo"
+
+        lista = util.GenerateListHTML(procExec,index)
+        if len(algoritmo[0].memoria.listaExec) < aux:
+            index += 1
+
         return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'lista': lista, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
-    
+
     resultado[f"{memorias[0].X}"].update({f"{algoritmo[0].nome}": {"PageMiss": algoritmo[0].pageMiss, "TempSubs": algoritmo[0].tempo, "Tamanho": algoritmo[0].tamanhoMemoria()}})
     algoritmo.pop(0)
+    index = 0 # Começar outro algoritmo precisa recomeçar a lista de processo
 
     if len(algoritmo) == 0:
         memorias.pop(0)
@@ -108,8 +122,9 @@ def PassoAPasso(request):
 
         algoritmo = util.PreencherListaAlgoritmo(memorias, alg_exec)
         
-    nome, pageMiss, tempo, lista, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
+    nome, pageMiss, tempo, pagina, memNova = util.GenerateDataToAlgoritmo(algoritmo[0])
     passo = "Começar Próximo Algoritmo"
+    lista = util.GenerateListHTML(procExec,index)
     memAntiga = util.GenerateMemoryHtml(algoritmo[0])
     return render(request, "MMU/algoritmo.html", {'nome': nome, 'pageMiss': pageMiss, 'tempo': tempo, 'lista': lista, 'memAntiga': memAntiga, 'pagina': pagina, 'memNova': memNova, 'passo': passo})
 

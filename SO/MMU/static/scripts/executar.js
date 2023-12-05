@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const vetorQtdPro = []
         const vetorTamPro = []
 
-        // Itera sobre os elementos do formulário
         for (const elemento of formulario.elements) {
             if (elemento.name.startsWith('qtdPro') && elemento.name.slice(6).match(/^\d+$/)) {
                 const numeroProcesso = elemento.name.slice(6)
