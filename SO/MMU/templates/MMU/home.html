@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <script type="text/javascript" src="{% static 'scripts/checkbox.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/MaisMenosProcessos.js' %}"></script>
@@ -46,13 +45,14 @@
         </div>
         <div class="memoria">
             <h3>Memória</h3>
-            <label for="page">Insira o Tamanho da Página (kB):</label><input type="number" name="page" id="page" value=4 min="1">
-            <label for="Y">% do processo ao iniciar na memória:</label><input type="number" name="Y" id="Y" value=10 min="1">
             <div class="botoesMemoria">
                 <button id="menosMemoria" style="display: none;" type="button" onclick="removerLinhaMemoria()">-</button>
                 <button id="maisMemoria" type="button" onclick="adicionarLinhaMemoria()">+</button>
             </div>
+            <label for="page">Insira o Tamanho da Página (kB):</label><input type="number" name="page" id="page" value=4 min="1">
+            <label for="Y">% do processo ao iniciar na memória:</label><input type="number" name="Y" id="Y" value=10 min="1">
             <div class="inputMemoria">
+                <hr>
                 <label for="X1">Tamanho da memória RAM (relativo a SWAP):</label><input type="number" name="X1" id="X1" value=10 min="1" max="100">
             </div>
         </div>
