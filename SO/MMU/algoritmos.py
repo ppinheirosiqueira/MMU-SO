@@ -352,7 +352,6 @@ class LRU(classes.Algoritmo):
         for page in self.memoria.paginas:
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}, Line: {page['line']}")
 
-
 class Envelhecimento(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
