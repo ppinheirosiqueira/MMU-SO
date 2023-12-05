@@ -3,3 +3,4 @@ __pycache__/*
 SO/MMU/__pycache__/*
 SO/MMU/migrations/*
 SO/SO/__pycache__/*
+SO/db.sqlite3
