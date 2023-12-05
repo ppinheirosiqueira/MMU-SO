@@ -41,6 +41,7 @@ table, th td {
 }
 
 th, td {
+    border: 1px solid #dddddd;
     padding: 5px;
     text-align: left;
 }

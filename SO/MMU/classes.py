@@ -78,6 +78,21 @@ class Algoritmo:
     
     def isFull(self):
         return True if self.memoria.tamanho == len(self.memoria.paginas) else False
+    
+    def tamanhoMemoria(self):
+        tamanho = self.memoria.size * self.memoria.tamanho
+        
+        if tamanho / 1024 >= 1:
+            tamanho /= 1024
+            if tamanho / 1024 >= 1:
+                tamanho /= 1024
+                tamanho = str(tamanho) + 'GB'
+            else:
+                tamanho = str(tamanho) + 'MB'
+        else:
+            tamanho = str(tamanho) + 'kB'
+
+        return tamanho
 
 def criandoSWAP(swap, vetorQtdPro,vetorTamPro):
     aux = 1
