@@ -70,43 +70,43 @@ def ExecutarAlgoritmos(memorias, alg_exec, swap, resultados):
         if alg_exec['rand']:
             rand_algo = algoritmos.Random(mem)
             rand_algo.Rand(swap)
-            mem_data.update({"Random": {"PageMiss": rand_algo.pageMiss, "TempSubs": rand_algo.tempo}})
+            mem_data.update({"Random": {"PageMiss": rand_algo.pageMiss, "TempSubs": rand_algo.tempo, "Tamanho": rand_algo.tamanhoMemoria()}})
             del rand_algo
 
         if alg_exec['nru']:
             nru_algo = algoritmos.NRU(mem)
             nru_algo.NRU(swap)
-            mem_data.update({"NRU": {"PageMiss": nru_algo.pageMiss, "TempSubs": nru_algo.tempo}})
+            mem_data.update({"NRU": {"PageMiss": nru_algo.pageMiss, "TempSubs": nru_algo.tempo, "Tamanho": nru_algo.tamanhoMemoria()}})
             del nru_algo
 
         if alg_exec['fifo']:
             fifo_algo = algoritmos.FIFO(mem)
             fifo_algo.FIFO(swap)
-            mem_data.update({"FIFO": {"PageMiss": fifo_algo.pageMiss, "TempSubs": fifo_algo.tempo}})
+            mem_data.update({"FIFO": {"PageMiss": fifo_algo.pageMiss, "TempSubs": fifo_algo.tempo, "Tamanho": fifo_algo.tamanhoMemoria()}})
             del fifo_algo
 
         if alg_exec['sc']:
             sc_algo = algoritmos.SC(mem)
             sc_algo.SC(swap)
-            mem_data.update({"SC": {"PageMiss": sc_algo.pageMiss, "TempSubs": sc_algo.tempo}})
+            mem_data.update({"SC": {"PageMiss": sc_algo.pageMiss, "TempSubs": sc_algo.tempo, "Tamanho": sc_algo.tamanhoMemoria()}})
             del sc_algo
 
         if alg_exec['relogio']:
             relogio_algo = algoritmos.Relogio(mem)
             relogio_algo.Relogio(swap)
-            mem_data.update({"Relogio": {"PageMiss": relogio_algo.pageMiss, "TempSubs": relogio_algo.tempo}})
+            mem_data.update({"Relogio": {"PageMiss": relogio_algo.pageMiss, "TempSubs": relogio_algo.tempo, "Tamanho": relogio_algo.tamanhoMemoria()}})
             del relogio_algo
         
         if alg_exec['lru']:
             lru_algo = algoritmos.LRU(mem)
             lru_algo.LRU(swap)
-            mem_data.update({"LRU": {"PageMiss": lru_algo.pageMiss, "TempSubs": lru_algo.tempo}})
+            mem_data.update({"LRU": {"PageMiss": lru_algo.pageMiss, "TempSubs": lru_algo.tempo, "Tamanho": lru_algo.tamanhoMemoria()}})
             del lru_algo
 
         if alg_exec['envelhecimento']:
             envelhecimento_algo = algoritmos.Envelhecimento(mem)
             envelhecimento_algo.Envelhecimento(swap)
-            mem_data.update({"Envelhecimento": {"PageMiss": envelhecimento_algo.pageMiss, "TempSubs": envelhecimento_algo.tempo}})
+            mem_data.update({"Envelhecimento": {"PageMiss": envelhecimento_algo.pageMiss, "TempSubs": envelhecimento_algo.tempo, "Tamanho": envelhecimento_algo.tamanhoMemoria()}})
             del envelhecimento_algo
 
         resultados.update({f"{mem.X}": mem_data})
@@ -118,7 +118,7 @@ def GenerateDataToAlgoritmo(algoritmo):
     pageMiss = algoritmo.pageMiss
     
     tempo = algoritmo.tempo 
-    
+
     if algoritmo.currentPage == -1:
         pagina = ""
     else:
@@ -127,6 +127,17 @@ def GenerateDataToAlgoritmo(algoritmo):
     memNova = GenerateMemoryHtml(algoritmo)
 
     return nome, pageMiss, tempo, pagina, memNova
+
+def GenerateListHTML(lista,index):
+    listaHTML = "<table class='lista'><tr>"
+    for chave, proc in enumerate(lista):
+        if chave == index:
+            listaHTML += f"<td class='executando'>{proc}</td>"
+        else:
+            listaHTML += f'<td>{proc}</td>'
+    listaHTML += "</tr></table>"
+
+    return listaHTML
 
 def GenerateMemoryHtml(algoritmo):
     htmlMemoria = "<table class='memoria'>"

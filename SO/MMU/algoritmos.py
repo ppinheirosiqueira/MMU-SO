@@ -342,11 +342,15 @@ class LRU(classes.Algoritmo):
         self.matriz[index] = np.ones(self.memoria.tamanho)
         self.matriz[:,index] = np.zeros(self.memoria.tamanho)
 
+    def tamanhoMemoria(self):
+        tamanho = super().tamanhoMemoria()
+        matriz = self.memoria.tamanho * self.memoria.tamanho
+        return tamanho + ' + ' + str(matriz) + ' contadores'
+
     def print(self):
         print(f"Algoritmo: LRU, PageMiss: {self.pageMiss}, Tempo de Subistituição: {self.tempo}s")
         for page in self.memoria.paginas:
             print(f"Page: {page['page']}, R: {page['R']}, Processo: {page['processo']}, Line: {page['line']}")
-
 
 class Envelhecimento(classes.Algoritmo):
     def __init__(self, memoria):
@@ -413,6 +417,11 @@ class Envelhecimento(classes.Algoritmo):
         referencias = np.array(referencias)
         referencias = referencias[...,None]
         self.matriz[:, 0] = referencias.flatten()
+
+    def tamanhoMemoria(self):
+        tamanho = super().tamanhoMemoria()
+        matriz = self.memoria.tamanho * 8
+        return tamanho + ' + ' + str(matriz) + ' contadores'
 
     def print(self):
         print(f"Algoritmo: Envelhecimento, PageMiss: {self.pageMiss}, Tempo de Subistituição: {self.tempo}s")

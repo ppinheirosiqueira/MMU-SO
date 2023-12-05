@@ -14,6 +14,7 @@
         <div class="nome">Algoritmo {{ nome }}</div>
         <div class="pagemiss">Número de Page Miss: {{ pageMiss }}</div>
         <div class="tempo">Tempo de Substituição: {{ tempo |floatformat:6 }}s</div>
+        <div class="lista">Lista de execução: {{ lista | safe }}</div>
         <div class="memorias">
             Memória Anterior
             <div class="memAntiga">

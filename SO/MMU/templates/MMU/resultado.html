@@ -24,6 +24,7 @@
                                         <th>Algoritmo</th>
                                         <th>Número de Page Miss</th>
                                         <th>Tempo de Substituição</th>
+                                        <th>Tamanho da Memória</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -37,6 +38,9 @@
                                             </td>
                                             <td>
                                                 {{ dado.TempSubs |floatformat:6 }}s
+                                            </td>
+                                            <td>
+                                                {{ dado.Tamanho }}
                                             </td>
                                         </tr>
                                     {% endfor %}

@@ -63,3 +63,9 @@ th:nth-child(odd), td:nth-child(odd) {
 .proximaPage {
     margin: 10px 0px 10px 0px;
 }
+
+.lista .executando{
+    font-weight: bold;
+    background-color: black;
+    color: white;
+}
