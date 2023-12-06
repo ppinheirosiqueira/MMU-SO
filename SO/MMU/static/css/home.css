@@ -7,7 +7,6 @@
 /* Estilos gerais */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #FFF;
     color: #333;
     line-height: 1.6;
 }
@@ -200,7 +199,6 @@ form {
     grid-template-columns: 30% 30% 33%;
     gap: 2.5%;
     grid-template-areas: 'teste memoria processo';
-    background-color:#a9aba3;
 }
 
 /* Estilos para os botões*/

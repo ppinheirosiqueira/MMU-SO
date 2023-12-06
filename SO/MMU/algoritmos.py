@@ -222,7 +222,7 @@ class Relogio(classes.Algoritmo):
     def __init__(self, memoria):
         super().__init__(memoria)
         self.pointer = 0
-        self.nome = "Relogio"
+        self.nome = "Relógio"
 
     def Relogio(self, swap):
         while self.Step(swap) : pass

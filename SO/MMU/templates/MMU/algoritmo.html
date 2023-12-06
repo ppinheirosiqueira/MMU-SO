@@ -5,13 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/memoria.css' %}">
     <title>MMU - Algoritmos</title>
 </head>
 <body>
+    <div class="nome"><h1>Algoritmo {{ nome }}</h1></div>
     <div class="algoritmo">
-        <div class="nome">Algoritmo {{ nome }}</div>
         <div class="pagemiss">Número de Page Miss: {{ pageMiss }}</div>
         <div class="tempo">Tempo de Substituição: {{ tempo |floatformat:6 }}s</div>
         <div class="lista">Lista de execução: {{ lista | safe }}</div>
